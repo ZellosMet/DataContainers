@@ -40,8 +40,13 @@ public:
 	}
 	ForwardList (ForwardList&& other)noexcept
 	{
-		this->Head->pNext = other.Head->pNext;
-		other.Head = nullptr;
+		Element* Temp = other.Head;
+		while (Temp)
+		{
+			Temp->pNext = other.Head->pNext;
+			Temp = Temp->pNext;
+			other.Head->pNext = nullptr;
+		}
 		std::cout << "FLMoveConstructor:\t" << this << std::endl;
 	}
 	~ForwardList()
@@ -141,7 +146,6 @@ public:
 	}
 };
 
-
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -165,7 +169,8 @@ void main()
 	list.print();
 	ForwardList list2 = list;
 	list2.print();
+	list2.push_back(10);
 	ForwardList list3;
-	list3 = list;
+	list3 = list2;
 	list3.print();
 }
