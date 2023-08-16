@@ -29,8 +29,6 @@ public:
 	ForwardList(const ForwardList& other)
 	{
 		Element* Temp = other.Head;
-		push_front(Temp->Data);
-		Temp = Temp->pNext;
 		while (Temp)
 		{
 			push_back(Temp->Data);
@@ -82,10 +80,14 @@ public:
 	}
 	void push_back(int Data)
 	{
-		Element* Temp = Head;
-		while (Temp->pNext)
-			Temp = Temp->pNext;
-		Temp->pNext = new Element(Data);
+		if (!Head) push_front(Data);
+		else
+		{
+			Element* Temp = Head;
+			while (Temp->pNext)
+				Temp = Temp->pNext;
+			Temp->pNext = new Element(Data);
+		}
 	}
 	void pop_front() 
 	{
@@ -154,9 +156,7 @@ void main()
 	std::cout << "Введите размер списка: "; std::cin >> n;
 	ForwardList list;
 	for (int i = 0; i < n; i++)
-	{
 		list.push_front(rand() % 100);
-	}
 	list.push_back(123);
 	list.print();
 	list.pop_front();
