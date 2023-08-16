@@ -63,7 +63,7 @@ public:
 		}
 		return *this;
 	}
-	ForwardList& operator=(ForwardList&& other)noexcept
+	ForwardList& operator=(const ForwardList&& other)noexcept
 	{
 		this->Head->pNext = other.Head->pNext;
 		delete other.Head->pNext;
