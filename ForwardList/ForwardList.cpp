@@ -253,7 +253,7 @@ void main()
 #ifdef RANGE_BASED_FOR_LIST
 
 	ForwardList list = {3, 5, 8, 13, 21};
-	for (int i : list)
+	for (auto i : list)
 	{
 		std::cout << i << "\t";
 	}
