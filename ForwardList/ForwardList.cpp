@@ -19,10 +19,10 @@ public:
 	{
 		std::cout << "EDestructor:\t" << this << std::endl;
 	}
+
 	friend class ForwardList;
 	friend class Iterator;
 	friend ForwardList operator+(const ForwardList& left, const  ForwardList& right);
-	friend std::ostream& operator<<(std::ostream& os, const Element FL);
 };
 
 class Iterator
@@ -77,10 +77,12 @@ public:
 		//	push_back(Temp->Data);
 		std::cout << "FLCopyConstructor:\t" << this << std::endl;
 	}
-	ForwardList(ForwardList&& other)noexcept
+	ForwardList(ForwardList&& other): ForwardList()
 	{
-		this->Head = other.Head;
-		other.Head = nullptr;
+		//this->Head = other.Head;
+		//other.Head = nullptr;
+
+		*this = std::move(other); //функция move() принудительно вызывает MoveAssigment для объекта
 		std::cout << "FLMoveConstructor:\t" << this << std::endl;
 	}
 	~ForwardList()
@@ -98,12 +100,11 @@ public:
 		std::cout << "FLCopyAssignment:\t" << this << std::endl;
 		return *this;
 	}
-	ForwardList& operator=(ForwardList&& other)noexcept
+	ForwardList& operator=(ForwardList&& other)
 	{
-		if (this == &other) return *this;
-		Element* Temp = Head;
 		while (Head) pop_front();
 		Head = other.Head;
+		other.Head = nullptr;
 		std::cout << "FLMoveAssignment:\t" << this << std::endl;
 		return *this;
 	}
@@ -180,7 +181,7 @@ public:
 
 	friend class Iterator;
 	friend ForwardList operator+(const ForwardList& left, const  ForwardList& right);
-	friend std::ostream& operator<<(std::ostream& os, const Element FL);
+
 };
 ForwardList operator+(const ForwardList& left, const  ForwardList& right)
 {
@@ -189,16 +190,11 @@ ForwardList operator+(const ForwardList& left, const  ForwardList& right)
 		cat.push_back(Temp->Data);
 	return cat;
 }
-std::ostream& operator<<(std::ostream& os, const Element FL)
-{
-	os << FL.Data;
-	return os;
-}
 
 //#define BASE_CHECK
-//#define OPERATOR_PLUS_CHECK
+#define OPERATOR_PLUS_CHECK
 //#define RANGE_BASED_FOR_ARRAY
-#define RANGE_BASED_FOR_LIST
+//#define RANGE_BASED_FOR_LIST
 
 void main()
 {
@@ -241,15 +237,19 @@ void main()
 	list1.push_back(13);
 	list1.push_back(21);
 	list1.print();
+	std::cout << std::endl;
 
-	ForwardList list2;
-	list2.push_back(34);
+	ForwardList list2 = list1+list1;
+	/*list2.push_back(34);
 	list2.push_back(55);
-	list2.push_back(89);
+	list2.push_back(89);*/
 	list2.print();
+	std::cout << std::endl;
 
-	ForwardList list3 = list1 + list2;
+	ForwardList list3;
+	list3 = list1 + list2;
 	list3.print();
+	std::cout << std::endl;
 
 #endif // OPERATOR_PLUS_CHECK
 
