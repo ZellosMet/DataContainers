@@ -1,6 +1,8 @@
 ﻿#include<iostream>
 
 class ForwardList;
+class Element;
+class Iterator;
 ForwardList operator+(const ForwardList& left, const  ForwardList& right);
 
 class Element
@@ -18,8 +20,41 @@ public:
 		std::cout << "EDestructor:\t" << this << std::endl;
 	}
 	friend class ForwardList;
+	friend class Iterator;
 	friend ForwardList operator+(const ForwardList& left, const  ForwardList& right);
 	friend std::ostream& operator<<(std::ostream& os, const Element FL);
+};
+
+class Iterator
+{
+	Element* Temp;
+public:
+	Iterator(Element* Temp = nullptr) : Temp(Temp)
+	{
+		std::cout << "IConstructor:\t" << this << std::endl;
+	}
+	~Iterator()
+	{
+		std::cout << "IDestructor:\t" << this << std::endl;
+	}
+
+	Iterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+	bool operator==(const Iterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator!=(const Iterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+	int operator*()
+	{
+		return Temp->Data;
+	}
 };
 
 class ForwardList
@@ -31,9 +66,9 @@ public:
 		Head = nullptr; //если список пуст, то его голова указывает на 0
 		std::cout << "FLConstructor:\t" << this << std::endl;
 	}
-	ForwardList(std::initializer_list<int> list)
+	ForwardList(const std::initializer_list<int>& list)
 	{
-		for (auto i : list) push_back(i);
+		for (int i : list) push_back(i);
 	}
 	ForwardList(const ForwardList& other):ForwardList()
 	{
@@ -133,32 +168,17 @@ public:
 	}
 
 	//Range-based for loop
-	Element* operator++()const
+
+	Iterator begin()
 	{
-		Element* Temp = Head;
-		Temp = Temp->pNext;
-		return Temp;
-	}
-	bool operator!=(const ForwardList& counter)const
-	{
-		return Head->pNext != counter.Head->pNext;
-	}
-	int const& operator*()const 
-	{ 
-		return Head->Data;
-	}	
-	Element* begin()
-	{		
 		return Head;
 	}
-	Element* end()
+	Iterator end()
 	{
-		Element* Temp = Head;
-		while (Temp->pNext)
-			Temp = Temp->pNext;
-		return Temp;
+		return nullptr;
 	}
-	
+
+	friend class Iterator;
 	friend ForwardList operator+(const ForwardList& left, const  ForwardList& right);
 	friend std::ostream& operator<<(std::ostream& os, const Element FL);
 };
@@ -252,10 +272,7 @@ void main()
 #ifdef RANGE_BASED_FOR_LIST
 
 	ForwardList list = {3, 5, 8, 13, 21};
-	for (auto i : list) //auto i?
-	{
-		std::cout << i << "\t";
-	}
-	std::cout << std::endl;
+	for ( int i : list) 
+		std::cout << i << "\t" << std::endl;
 #endif // RANGE_BASED_FOR_LIST
 }
