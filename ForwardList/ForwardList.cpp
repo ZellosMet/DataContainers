@@ -131,22 +131,22 @@ public:
 		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 			std::cout << Temp << "\t" << Temp->Data << "\t" << Temp->pNext << std::endl;
 	}
-	/*
-	ForwardList operator++()
+
+	//Range-based for loop
+	Element* operator++()const
 	{
-		Element* Temp;
+		Element* Temp = Head;
 		Temp = Temp->pNext;
-		return *this;
+		return Temp;
 	}
-	bool operator != (const ForwardList& counter) const
+	bool operator!=(const ForwardList& counter)const
 	{
 		return Head->pNext != counter.Head->pNext;
 	}
-	int const& operator* () const 
+	int const& operator*()const 
 	{ 
 		return Head->Data;
-	}
-	*/
+	}	
 	Element* begin()
 	{		
 		return Head;
@@ -155,9 +155,7 @@ public:
 	{
 		Element* Temp = Head;
 		while (Temp->pNext)
-		{
 			Temp = Temp->pNext;
-		}
 		return Temp;
 	}
 	
@@ -176,6 +174,7 @@ std::ostream& operator<<(std::ostream& os, const Element FL)
 	os << FL.Data;
 	return os;
 }
+
 //#define BASE_CHECK
 //#define OPERATOR_PLUS_CHECK
 //#define RANGE_BASED_FOR_ARRAY
@@ -253,7 +252,7 @@ void main()
 #ifdef RANGE_BASED_FOR_LIST
 
 	ForwardList list = {3, 5, 8, 13, 21};
-	for (auto i : list)
+	for (int i : list) //auto i?
 	{
 		std::cout << i << "\t";
 	}
