@@ -75,16 +75,11 @@ public:
 	ForwardList(const ForwardList& other) :ForwardList()
 	{
 		*this = other;
-		//for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-		//	push_back(Temp->Data);
 		std::cout << "FLCopyConstructor:\t" << this << std::endl;
 	}
 	ForwardList(ForwardList&& other) : ForwardList()
 	{
-		//this->Head = other.Head;
-		//other.Head = nullptr;
-
-		*this = std::move(other); //функция move() принудительно вызывает MoveAssigment для объекта
+		*this = std::move(other);
 		std::cout << "FLMoveConstructor:\t" << this << std::endl;
 	}
 	~ForwardList()
@@ -222,7 +217,6 @@ ForwardList operator+(const ForwardList& left, const  ForwardList& right)
 
 //#define BASE_CHECK
 //#define OPERATOR_PLUS_CHECK
-//#define RANGE_BASED_FOR_ARRAY
 #define RANGE_BASED_FOR_LIST
 
 void main()
