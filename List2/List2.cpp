@@ -164,7 +164,7 @@ public:
 		Temp->pNext = New;
 		while (Temp->pNext)
 			Temp = Temp->pNext;
-		Tail->pPrev = New;
+		Tail->pPrev = Temp->pPrev;
 	}
 	void erase(int index)
 	{
@@ -180,7 +180,7 @@ public:
 		delete Erased;
 		while (Temp->pNext)
 			Temp = Temp->pNext;
-		Tail->pPrev = Temp;
+		Tail->pPrev = Temp->pPrev;;
 	}
 
 	//Methods
@@ -215,9 +215,9 @@ ForwardList operator+(const ForwardList& left, const  ForwardList& right)
 	return cat;
 }
 
-//#define BASE_CHECK
+#define BASE_CHECK
 //#define OPERATOR_PLUS_CHECK
-#define RANGE_BASED_FOR_LIST
+//#define RANGE_BASED_FOR_LIST
 
 void main()
 {
