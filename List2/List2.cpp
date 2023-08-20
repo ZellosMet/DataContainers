@@ -101,7 +101,8 @@ public:
 	{
 		while (Head) pop_front();
 		Head = other.Head;
-		other.Head = nullptr;
+		Tail = other.Tail;
+		other.Head = other.Tail = nullptr;
 		std::cout << "FLMoveAssignment:\t" << this << std::endl;
 		return *this;
 	}
@@ -215,8 +216,8 @@ ForwardList operator+(const ForwardList& left, const  ForwardList& right)
 	return cat;
 }
 
-#define BASE_CHECK
-//#define OPERATOR_PLUS_CHECK
+//#define BASE_CHECK
+#define OPERATOR_PLUS_CHECK
 //#define RANGE_BASED_FOR_LIST
 
 void main()
