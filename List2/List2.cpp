@@ -1,4 +1,4 @@
-#include<iostream>
+п»ї#include<iostream>
 
 class ForwardList;
 class Element;
@@ -84,7 +84,7 @@ public:
 		//this->Head = other.Head;
 		//other.Head = nullptr;
 
-		*this = std::move(other); //функция move() принудительно вызывает MoveAssigment для объекта
+		*this = std::move(other); //С„СѓРЅРєС†РёСЏ move() РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕ РІС‹Р·С‹РІР°РµС‚ MoveAssigment РґР»СЏ РѕР±СЉРµРєС‚Р°
 		std::cout << "FLMoveConstructor:\t" << this << std::endl;
 	}
 	~ForwardList()
@@ -230,7 +230,7 @@ void main()
 	setlocale(LC_ALL, "");
 #ifdef BASE_CHECK
 	int n;
-	std::cout << "Введите размер списка: "; std::cin >> n;
+	std::cout << "Р’РІРµРґРёС‚Рµ СЂР°Р·РјРµСЂ СЃРїРёСЃРєР°: "; std::cin >> n;
 	ForwardList list;
 	for (int i = 0; i < n; i++)
 		list.push_back(rand() % 100);
