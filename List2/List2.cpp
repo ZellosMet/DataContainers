@@ -178,7 +178,6 @@ public:
 		{
 			std::cout << "IDestructor:\t" << this << std::endl;
 		}
-
 		Iterator& operator++()
 		{
 			Temp = Temp->pNext;
@@ -247,6 +246,6 @@ void main()
 
 	List list = { 3,5,8,13,21 };
 	for (int i : list) std::cout << i << std::endl;
-	for (int i = list.end(); i != list.begin(); i++) std::cout << i << std::endl;
+	for (auto i = list.begin(); i != list.end(); i++) std::cout << *i << std::endl;
 	
 }
