@@ -1,197 +1,202 @@
 ﻿#include<iostream>
 
-class ForwardList;
-class Element;
+#define delin "\n_____________________________________________________\n"
+
 class Iterator;
-ForwardList operator+(const ForwardList& left, const  ForwardList& right);
+class ReversIterator;
 
-class Element
+class List
 {
-	int Data;
-	Element* pNext;
-	Element* pPrev;
+	class Element
+	{
+		int Data;
+		Element* pNext;
+		Element* pPrev;
 
+	public:
+		Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr) :Data(Data), pNext(pNext), pPrev(pPrev)
+		{
+			std::cout << "EConstructor:\t" << this << std::endl;
+		}
+		~Element()
+		{
+			std::cout << "EDestructor:\t" << this << std::endl;
+		}
+		friend class List;
+		friend class Iterator;
+		friend class ReversIterator;
+
+	}*Head, *Tail;  //сразу же объявляем элементы класса типа Element*
+
+	unsigned int size;
 public:
-	Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr) :Data(Data), pNext(pNext), pPrev(pPrev)
-	{
-		std::cout << "EConstructor:\t" << this << std::endl;
-	}
-	~Element()
-	{
-		std::cout << "EDestructor:\t" << this << std::endl;
-	}
-
-	friend class ForwardList;
-	friend class Iterator;
-	friend ForwardList operator+(const ForwardList& left, const  ForwardList& right);
-};
-
-class Iterator
-{
-	Element* Temp;
-public:
-	Iterator(Element* Temp = nullptr) : Temp(Temp)
-	{
-		std::cout << "IConstructor:\t" << this << std::endl;
-	}
-	~Iterator()
-	{
-		std::cout << "IDestructor:\t" << this << std::endl;
-	}
-
-	Iterator& operator++()
-	{
-		Temp = Temp->pNext;
-		return *this;
-	}
-	bool operator==(const Iterator& other)const
-	{
-		return this->Temp == other.Temp;
-	}
-	bool operator!=(const Iterator& other)const
-	{
-		return this->Temp != other.Temp;
-	}
-	int operator*()
-	{
-		return Temp->Data;
-	}
-};
-
-class ForwardList
-{
-	Element* Head;
-	Element* Tail;
-public:
-	ForwardList()
+	List()
 	{
 		Head = Tail = nullptr;
-		std::cout << "FLConstructor:\t" << this << std::endl;
+		std::cout << "LConstructor:\t" << this << std::endl;
 	}
-	ForwardList(const std::initializer_list<int>& list)
+	List(const std::initializer_list<int>& il):List()
 	{
-		for (int i : list) push_back(i);
+		for (int i : il) push_back(i);
 	}
-	ForwardList(const ForwardList& other) :ForwardList()
+	~List()
 	{
-		*this = other;
-		std::cout << "FLCopyConstructor:\t" << this << std::endl;
-	}
-	ForwardList(ForwardList&& other) : ForwardList()
-	{
-		*this = std::move(other);
-		std::cout << "FLMoveConstructor:\t" << this << std::endl;
-	}
-	~ForwardList()
-	{
-		while (Head)
-			pop_front();
-		std::cout << "FLDestructor:\t" << this << std::endl;
-	}
-	ForwardList& operator=(const ForwardList& other)
-	{
-		if (this == &other) return *this;
-		while (Head) pop_front();
-		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-			push_back(Temp->Data);
-		std::cout << "FLCopyAssignment:\t" << this << std::endl;
-		return *this;
-	}
-	ForwardList& operator=(ForwardList&& other)
-	{
-		while (Head) pop_front();
-		Head = other.Head;
-		Tail = other.Tail;
-		other.Head = other.Tail = nullptr;
-		std::cout << "FLMoveAssignment:\t" << this << std::endl;
-		return *this;
+		//while (Head)pop_front();
+		while (Tail)pop_back();
+		std::cout << "LDestructor:\t" << this << std::endl;
 	}
 
-	//Adding Elements
-
+					//Ading elements
 	void push_front(int Data)
-	{		
-		Element* Temp = new Element(Data);
-		Temp->pNext = Head;
-		if (Head)
-			Head->pPrev = Temp;
-		if(!Tail)
-			Tail = Temp;
-		Head = Temp;
+	{
+		if(!Head && !Tail) Head = Tail = new Element(Data);
+		else Head = Head->pPrev = new Element(Data, Head);
+		size++;
 	}
 	void push_back(int Data)
 	{
-		Element* Temp = new Element(Data);
-		Temp->pPrev = Tail;
-		if (Tail)
-			Tail->pNext = Temp;
-		if (!Head)
-			Head = Temp;
-		Tail = Temp;
+		if (!Head && !Tail) Head = Tail = new Element(Data);
+		else Tail = Tail->pNext = new Element(Data, nullptr, Tail);
+		size++;
 	}
+	void insert(int Data, int index)
+	{
+		if (!index) return push_front(Data);
+		if (index > size) return;
+		Element* Temp;
+		if (index < size/2)
+		{
+			Temp = Head;
+			for (int i = 0; i < index; i++)Temp = Temp->pNext;
+		}
+		else
+		{
+			Temp = Tail;
+			for (int i = 0; i < size-index-1; i++)Temp = Temp->pPrev;
+		}
+		Temp->pPrev = Temp->pPrev->pNext = new Element(Data, Temp, Temp->pPrev);
+		size++;
+	}
+
+					//Removing elements
 	void pop_front()
 	{
-		if (!Head) return;
-		Element* Temp = Head->pNext;
-		if (Temp)
-			Temp->pPrev = nullptr;
-		else
-			Tail = Temp;
-		delete Head;
-		Head = Temp;
+		if (!Head && !Tail) return;
+		if (Head == Tail)
+		{
+			delete Head;
+			Head = Tail = nullptr;
+			return;
+		}
+		Head = Head->pNext;
+		delete Head->pPrev;		
+		Head->pPrev = nullptr;
+		size--;
 	}
 	void pop_back()
 	{
-		if (!Tail) return;
-		Element* Temp = Tail->pPrev;
-		if (Temp)
-			Temp->pNext = nullptr;
-		else
-			Head = nullptr;
-		delete Tail;
-		Tail = Temp;
-	}
-	void insert(int index, int Data)
-	{
-		if (!index) return push_front(Data);
-		Element* Temp = Head;
-		for (int i = 0; i < index - 1; i++)
-			if (Temp->pNext)
-				Temp = Temp->pNext;
-		if (!Temp->pNext) return push_back(Data);
-		Element* New = new Element(Data);
-		New->pPrev = Temp;
-		New->pNext = Temp->pNext;
-		Temp->pNext = New;
-		while (Temp->pNext)
-			Temp = Temp->pNext;
-		Tail->pPrev = Temp->pPrev;
+		if (Head == Tail)return pop_front();
+		Tail = Tail->pPrev;
+		delete Tail->pNext;
+		Tail->pNext = nullptr;
+		size--;
 	}
 	void erase(int index)
 	{
 		if (!index) return pop_front();
-		Element* Temp = Head;
-		for (int i = 0; i < index - 1; i++)
-			if (Temp->pNext)
-				Temp = Temp->pNext;
-		if (!Temp->pNext) return pop_back();
-		Element* Erased = Temp->pNext;
-		Temp->pNext = Temp->pNext->pNext;
-		Erased->pPrev = Erased->pPrev->pPrev;
-		delete Erased;
-		while (Temp->pNext)
-			Temp = Temp->pNext;
-		Tail->pPrev = Temp->pPrev;;
+		if (index >= size) return;
+		Element* Temp;
+		if (index < size / 2)
+		{
+			Temp = Head;
+			for (int i = 0; i < index; i++)Temp = Temp->pNext;
+		}
+		else
+		{
+			Temp = Tail;
+			for (int i = 0; i < size - index - 1; i++)Temp = Temp->pPrev;
+		}
+		Temp->pNext->pPrev = Temp->pPrev;
+		Temp->pPrev->pNext = Temp->pNext;
+		delete Temp;
+		size--;
 	}
-
-	//Methods
-
+				//Methods
 	void print()const
 	{
-		std::cout << "Head: " << Head << std::endl;
 		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
-			std::cout << Temp << "\t" << Temp->Data << "\t" << Temp->pNext << std::endl;
+			std::cout << Temp->pPrev << "\t" << Temp->Data << "\t" << Temp->pNext << std::endl;
 	}
+	void revprint()const
+	{
+		for (Element* Temp = Tail; Temp; Temp = Temp->pPrev)
+			std::cout << Temp->pPrev << "\t" << Temp->Data << "\t" << Temp->pNext << std::endl;
+	}
+//Iterators
+
+	class ReversIterator
+	{
+		Element* Temp;
+	public:
+		ReversIterator(Element* Temp = nullptr) : Temp(Temp)
+		{
+			std::cout << "IConstructor:\t" << this << std::endl;
+		}
+		~ReversIterator()
+		{
+			std::cout << "IDestructor:\t" << this << std::endl;
+		}
+
+		ReversIterator& operator++()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		bool operator==(const ReversIterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+		bool operator!=(const ReversIterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+		int operator*()
+		{
+			return Temp->Data;
+		}	
+	};
+
+	class Iterator
+	{
+		Element* Temp;
+	public:
+		Iterator(Element* Temp = nullptr) : Temp(Temp)
+		{
+			std::cout << "IConstructor:\t" << this << std::endl;
+		}
+		~Iterator()
+		{
+			std::cout << "IDestructor:\t" << this << std::endl;
+		}
+
+		Iterator& operator++()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		bool operator==(const Iterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+		bool operator!=(const Iterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+		int operator*()
+		{
+			return Temp->Data;
+		}
+	};
 
 	//Range-based for loop
 
@@ -204,73 +209,44 @@ public:
 		return nullptr;
 	}
 
-	friend class Iterator;
-	friend ForwardList operator+(const ForwardList& left, const  ForwardList& right);
+	ReversIterator begin(int)
+	{
+		return Tail;
+	}
+	ReversIterator end(int)
+	{
+		return nullptr;
+	}
 
 };
-ForwardList operator+(const ForwardList& left, const  ForwardList& right)
-{
-	ForwardList cat = left;
-	for (Element* Temp = right.Head; Temp; Temp = Temp->pNext)
-		cat.push_back(Temp->Data);
-	return cat;
-}
 
 //#define BASE_CHECK
-#define OPERATOR_PLUS_CHECK
-//#define RANGE_BASED_FOR_LIST
 
 void main()
 {
 	setlocale(LC_ALL, "");
-#ifdef BASE_CHECK
 	int n;
+
+#ifdef BASE_CHECK
 	std::cout << "Введите размер списка: "; std::cin >> n;
-	ForwardList list;
+	List list;
 	for (int i = 0; i < n; i++)
-		list.push_back(rand() % 100);
+		list.push_front(rand() % 100);
 	list.print();
-	
-	list.pop_front();
-	list.print();
+	std::cout << std::endl;
 	list.pop_back();
 	list.print();
-	list.insert(10, 123);
+	std::cout << delin;
+	list.insert(123, 4);
 	list.print();
-	list.erase(10);
+	std::cout << delin;
+	list.erase(2);
 	list.print();
+	std::cout << delin;
+#endif 
 
-#endif // BASE_CHECK
-
-#ifdef OPERATOR_PLUS_CHECK
-	ForwardList list1;
-	list1.push_back(3);
-	list1.push_back(5);
-	list1.push_back(8);
-	list1.push_back(13);
-	list1.push_back(21);
-	list1.print();
-
-	ForwardList list2 = list1;
-	list2.print();
-	list2.push_back(34);
-	list2.push_back(55);
-	list2.push_back(89);
-	list2.print();
-	std::cout << std::endl << std::endl << std::endl;
-
-	ForwardList list3;
-	list3 = list1 + list2;
-	list3.print();
-	std::cout << std::endl << std::endl << std::endl;
-
-#endif // OPERATOR_PLUS_CHECK
-
-#ifdef RANGE_BASED_FOR_LIST
-
-	ForwardList list = { 3, 5, 8, 13, 21, 34, 55};
-	for (int i : list)
-		std::cout << i << "\t" << std::endl;
-
-#endif // RANGE_BASED_FOR_LIST
+	List list = { 3,5,8,13,21 };
+	for (int i : list) std::cout << i << std::endl;
+	for (int i = list.end(); i != list.begin(); i++) std::cout << i << std::endl;
+	
 }
