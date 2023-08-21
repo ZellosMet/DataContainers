@@ -246,6 +246,5 @@ void main()
 
 	List list = { 3,5,8,13,21 };
 	for (int i : list) std::cout << i << std::endl;
-	for (auto i = list.begin(); i != list.end(); i++) std::cout << *i << std::endl;
-	
+	for (int i = list.begin(); i != list.end(); i++) std::cout << i << std::endl;	
 }
