@@ -201,7 +201,7 @@ public:
 	}
 	Iterator end()
 	{
-		return Tail->pNext; ///???
+		return nullptr; ///???
 	}
 
 	friend class Iterator;
