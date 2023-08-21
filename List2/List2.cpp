@@ -146,7 +146,6 @@ public:
 		{
 			std::cout << "IDestructor:\t" << this << std::endl;
 		}
-
 		ReversIterator& operator++()
 		{
 			Temp = Temp->pPrev;
@@ -164,6 +163,7 @@ public:
 		{
 			return Temp->Data;
 		}	
+		friend class List;
 	};
 
 	class Iterator
@@ -195,6 +195,7 @@ public:
 		{
 			return Temp->Data;
 		}
+		friend class List;
 	};
 
 	//Range-based for loop
@@ -208,11 +209,11 @@ public:
 		return nullptr;
 	}
 
-	ReversIterator begin(int)
+	ReversIterator rbegin()
 	{
 		return Tail;
 	}
-	ReversIterator end(int)
+	ReversIterator rend()
 	{
 		return nullptr;
 	}
@@ -243,8 +244,8 @@ void main()
 	list.print();
 	std::cout << delin;
 #endif 
-
 	List list = { 3,5,8,13,21 };
+	std::cout << typeid(list.rend()).name() << std::endl;
 	for (int i : list) std::cout << i << std::endl;
-	for (int i = list.begin(); i != list.end(); i++) std::cout << i << std::endl;	
+	for (auto i = list.rbegin(); i != list.rend(); ++i) std::cout << *i << std::endl;	
 }
