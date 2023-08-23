@@ -24,8 +24,6 @@ class List
 			std::cout << "EDestructor:\t" << this << std::endl;
 		}
 		friend class List;
-		friend class Iterator;
-		//friend class ReversIterator;
 
 	}*Head, *Tail;  //сразу же объявляем элементы класса типа Element*
 
@@ -113,8 +111,8 @@ public:
 		return nullptr;
 	}
 
-	unsigned int size;
 
+	unsigned int size;
 	List()
 	{
 		Head = Tail = nullptr;
@@ -217,8 +215,9 @@ public:
 		for (Element* Temp = Tail; Temp; Temp = Temp->pPrev)
 			std::cout << Temp->pPrev << "\t" << Temp->Data << "\t" << Temp->pNext << std::endl;
 	}
-	friend Iterator;
 };
+
+
 
 //#define BASE_CHECK
 
