@@ -1,9 +1,10 @@
 ﻿#include<iostream>
 
-#define delin "\n_____________________________________________________\n"
+#define delim "\n----------------------------------------------------------------\n"
 
 class Iterator;
 class ReversIterator;
+class Element;
 
 class List
 {
@@ -24,12 +25,96 @@ class List
 		}
 		friend class List;
 		friend class Iterator;
-		friend class ReversIterator;
+		//friend class ReversIterator;
 
 	}*Head, *Tail;  //сразу же объявляем элементы класса типа Element*
 
-	unsigned int size;
 public:
+
+//Iterators
+class Iterator
+	{
+		Element* Temp;
+	public:
+		Iterator(Element* Temp = nullptr) : Temp(Temp)
+		{
+			std::cout << "IConstructor:\t" << this << std::endl;
+		}
+		~Iterator()
+		{
+			std::cout << "IDestructor:\t" << this << std::endl;
+		}
+		Iterator& operator++()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		bool operator==(const Iterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+		bool operator!=(const Iterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+		int operator*()
+		{
+			return Temp->Data;
+		}
+		friend List;
+	};
+
+class ReversIterator
+{
+	Element* Temp;
+public:
+	ReversIterator(Element* Temp = nullptr) : Temp(Temp)
+	{
+		std::cout << "IConstructor:\t" << this << std::endl;
+	}
+	~ReversIterator()
+	{
+		std::cout << "IDestructor:\t" << this << std::endl;
+	}
+	ReversIterator& operator++()
+	{
+		Temp = Temp->pPrev;
+		return *this;
+	}
+	bool operator==(const ReversIterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator!=(const ReversIterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+	int operator*()
+	{
+		return Temp->Data;
+	}
+};
+
+	Iterator begin()
+	{
+		return Head;
+	}
+	Iterator end()
+	{
+		return nullptr;
+	}
+
+	ReversIterator rbegin()
+	{
+		return Tail;
+	}
+	ReversIterator rend()
+	{
+		return nullptr;
+	}
+
+	unsigned int size;
+
 	List()
 	{
 		Head = Tail = nullptr;
@@ -132,92 +217,7 @@ public:
 		for (Element* Temp = Tail; Temp; Temp = Temp->pPrev)
 			std::cout << Temp->pPrev << "\t" << Temp->Data << "\t" << Temp->pNext << std::endl;
 	}
-//Iterators
-
-	class ReversIterator
-	{
-		Element* Temp;
-	public:
-		ReversIterator(Element* Temp = nullptr) : Temp(Temp)
-		{
-			std::cout << "IConstructor:\t" << this << std::endl;
-		}
-		~ReversIterator()
-		{
-			std::cout << "IDestructor:\t" << this << std::endl;
-		}
-		ReversIterator& operator++()
-		{
-			Temp = Temp->pPrev;
-			return *this;
-		}
-		bool operator==(const ReversIterator& other)const
-		{
-			return this->Temp == other.Temp;
-		}
-		bool operator!=(const ReversIterator& other)const
-		{
-			return this->Temp != other.Temp;
-		}
-		int operator*()
-		{
-			return Temp->Data;
-		}	
-		friend class List;
-	};
-
-	class Iterator
-	{
-		Element* Temp;
-	public:
-		Iterator(Element* Temp = nullptr) : Temp(Temp)
-		{
-			std::cout << "IConstructor:\t" << this << std::endl;
-		}
-		~Iterator()
-		{
-			std::cout << "IDestructor:\t" << this << std::endl;
-		}
-		Iterator& operator++()
-		{
-			Temp = Temp->pNext;
-			return *this;
-		}
-		bool operator==(const Iterator& other)const
-		{
-			return this->Temp == other.Temp;
-		}
-		bool operator!=(const Iterator& other)const
-		{
-			return this->Temp != other.Temp;
-		}
-		int operator*()
-		{
-			return Temp->Data;
-		}
-		friend class List;
-	};
-
-	//Range-based for loop
-
-	Iterator begin()
-	{
-		return Head;
-	}
-	Iterator end()
-	{
-		return nullptr;
-	}
-
-	ReversIterator rbegin()
-	{
-		return Tail;
-	}
-	ReversIterator rend()
-	{
-		return nullptr;
-	}
-
+	friend Iterator;
 };
 
 //#define BASE_CHECK
@@ -236,16 +236,18 @@ void main()
 	std::cout << std::endl;
 	list.pop_back();
 	list.print();
-	std::cout << delin;
+	std::cout << delim;
 	list.insert(123, 4);
 	list.print();
-	std::cout << delin;
+	std::cout << delim;
 	list.erase(2);
 	list.print();
-	std::cout << delin;
+	std::cout << delim;
 #endif 
+
 	List list = { 3,5,8,13,21 };
-	std::cout << typeid(list.rend()).name() << std::endl;
-	for (int i : list) std::cout << i << std::endl;
-	for (auto i = list.rbegin(); i != list.rend(); ++i) std::cout << *i << std::endl;	
+	//for (int i : list) std::cout << i << std::endl;
+	for (List::Iterator i = list.begin(); i != list.end(); ++i) std::cout << *i << std::endl;
+	std::cout << delim;
+	for (List::ReversIterator i = list.rbegin(); i != list.rend(); ++i) std::cout << *i << std::endl;
 }
