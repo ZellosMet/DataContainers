@@ -23,7 +23,7 @@ public:
 
 	friend class ForwardList<T>;
 	friend class Iterator<T>;
-	template<typename T> friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
+	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 
 };
 template<typename T>
@@ -178,7 +178,7 @@ public:
 	}
 
 	friend class Iterator<T>;
-	template<typename T> friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
+	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
 };
 
 template<typename T>
