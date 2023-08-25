@@ -1,7 +1,7 @@
 ﻿#include<iostream>
 
 template<typename T>class ForwardList;
-template<typename T> class Element;
+template<typename T>class Element;
 template<typename T>class Iterator;
 template<typename T> ForwardList<T> operator+(const ForwardList<T>& left, const  ForwardList<T>& right);
 
@@ -23,7 +23,7 @@ public:
 
 	friend class ForwardList<T>;
 	friend class Iterator<T>;
-	friend ForwardList<T> operator+(const ForwardList<T>& left, const  ForwardList<T>& right);
+	template<typename T> friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
 
 };
 template<typename T>
@@ -53,7 +53,7 @@ public:
 	{
 		return this->Temp != other.Temp;
 	}
-	int operator*()
+	T operator*()
 	{
 		return Temp->Data;
 	}
@@ -178,11 +178,11 @@ public:
 	}
 
 	friend class Iterator<T>;
-	friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
+	template<typename T> friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
 };
 
 template<typename T>
-ForwardList<T> operator+(const ForwardList<T>& left, const  ForwardList<T>& right)
+ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right)
 {
 	ForwardList cat = left;
 	for (Element<T>* Temp = right.Head; Temp; Temp = Temp->pNext) 
@@ -270,7 +270,9 @@ void main()
 #ifdef RANGE_BASED_FOR_LIST
 
 	ForwardList<char> list = { 'H','e','l','l','o' };
-	for ( char i : list) 
+	ForwardList<char> list2 = { 'W', 'o', 'r','l','d'};
+	ForwardList<char> list3 = list + list2;
+	for ( char i : list3) 
 		std::cout << i << "\t" << std::endl;
 #endif // RANGE_BASED_FOR_LIST
 }
