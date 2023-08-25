@@ -269,8 +269,8 @@ void main()
 
 #ifdef RANGE_BASED_FOR_LIST
 
-	ForwardList<int> list = {3, 5, 8, 13, 21};
-	for ( int i : list) 
+	ForwardList<char> list = { 'H','e','l','l','o' };
+	for ( char i : list) 
 		std::cout << i << "\t" << std::endl;
 #endif // RANGE_BASED_FOR_LIST
 }
