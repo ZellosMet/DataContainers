@@ -1,17 +1,18 @@
 ﻿#include<iostream>
 
-class ForwardList;
-class Element;
-class Iterator;
-ForwardList operator+(const ForwardList& left, const  ForwardList& right);
+template<typename T>class ForwardList;
+template<typename T> class Element;
+template<typename T>class Iterator;
+template<typename T> ForwardList<T> operator+(const ForwardList<T>& left, const  ForwardList<T>& right);
 
+template<typename T>
 class Element
 {
-	int Data; //значение элемента
-	Element* pNext; //адрес следующего элемента
+	T Data; //значение элемента
+	Element<T>* pNext; //адрес следующего элемента
 
 public:
-	Element(int Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
+	Element(int Data, Element<T>* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
 		std::cout << "EConstructor:\t" << this << std::endl;
 	}
@@ -20,16 +21,17 @@ public:
 		std::cout << "EDestructor:\t" << this << std::endl;
 	}
 
-	friend class ForwardList;
-	friend class Iterator;
-	friend ForwardList operator+(const ForwardList& left, const  ForwardList& right);
-};
+	friend class ForwardList<T>;
+	friend class Iterator<T>;
+	friend ForwardList<T> operator+(const ForwardList<T>& left, const  ForwardList<T>& right);
 
+};
+template<typename T>
 class Iterator
 {
-	Element* Temp;
+	Element<T>* Temp;
 public:
-	Iterator(Element* Temp = nullptr) : Temp(Temp)
+	Iterator(Element<T>* Temp = nullptr) : Temp(Temp)
 	{
 		std::cout << "IConstructor:\t" << this << std::endl;
 	}
@@ -57,31 +59,27 @@ public:
 	}
 };
 
+template<typename T>
 class ForwardList
 {
-	Element* Head; //Голова списка, содержит адрес начального элемента списка
+	Element<T>* Head; //Голова списка, содержит адрес начального элемента списка
 public:
 	ForwardList()
 	{
 		Head = nullptr; //если список пуст, то его голова указывает на 0
 		std::cout << "FLConstructor:\t" << this << std::endl;
 	}
-	ForwardList(const std::initializer_list<int>& list)
+	ForwardList(const std::initializer_list<T>& list)
 	{
 		for (int i : list) push_back(i);
 	}
 	ForwardList(const ForwardList& other):ForwardList()
 	{
 		*this = other;
-		//for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
-		//	push_back(Temp->Data);
 		std::cout << "FLCopyConstructor:\t" << this << std::endl;
 	}
 	ForwardList(ForwardList&& other): ForwardList()
 	{
-		//this->Head = other.Head;
-		//other.Head = nullptr;
-
 		*this = std::move(other); //функция move() принудительно вызывает MoveAssigment для объекта
 		std::cout << "FLMoveConstructor:\t" << this << std::endl;
 	}
@@ -95,7 +93,7 @@ public:
 	{
 		if (this == &other) return *this;
 		while (Head) pop_front();
-		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+		for (Element<T>* Temp = other.Head; Temp; Temp = Temp->pNext)
 			push_back(Temp->Data);
 		std::cout << "FLCopyAssignment:\t" << this << std::endl;
 		return *this;
@@ -111,21 +109,21 @@ public:
 
 	//Adding Elements
 
-	void push_front(int Data)
+	void push_front(T Data)
 	{
-		Head = new Element(Data, Head);
+		Head = new Element<T>(Data, Head);
 	}
-	void push_back(int Data)
+	void push_back(T Data)
 	{
 		if (!Head) return push_front(Data);
-		Element* Temp = Head;
+		Element<T>* Temp = Head;
 		while (Temp->pNext)
 			Temp = Temp->pNext;
-		Temp->pNext = new Element(Data);
+		Temp->pNext = new Element<T>(Data);
 	}
 	void pop_front() 
 	{
-		Element* Temp = Head;
+		Element<T>* Temp = Head;
 		Head = Temp->pNext;
 		delete Temp;
 	}
@@ -136,25 +134,25 @@ public:
 		delete Temp->pNext;	
 		Temp->pNext = nullptr;
 	}
-	void insert(int index, int Data)
+	void insert(int index, T Data)
 	{
 		if (index==0) return push_front(Data);
-		Element* Temp = Head;
+		Element<T>* Temp = Head;
 		for (int i = 0; i < index-1; i++) 
 			if(Temp->pNext)
 				Temp = Temp->pNext;
-		Element* New = new Element(Data);
+		Element<T>* New = new Element<T>(Data);
 		New->pNext = Temp->pNext;
 		Temp->pNext = New;
 	}
 	void erase(int index)
 	{
 		if (index==0) return pop_front();
-		Element* Temp = Head;
+		Element<T>* Temp = Head;
 		for (int i = 0; i < index-1; i++) 
 			if (Temp->pNext)
 				Temp = Temp->pNext;
-		Element* Erased = Temp->pNext;
+		Element<T>* Erased = Temp->pNext;
 		Temp->pNext = Temp->pNext->pNext;
 		delete Erased;
 	}
@@ -164,37 +162,38 @@ public:
 	void print()const
 	{	
 		std::cout << "Head: " << Head << std::endl;
-		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
+		for (Element<T>* Temp = Head; Temp; Temp = Temp->pNext)
 			std::cout << Temp << "\t" << Temp->Data << "\t" << Temp->pNext << std::endl;
 	}
 
 	//Range-based for loop
 
-	Iterator begin()
+	Iterator<T> begin()
 	{
 		return Head;
 	}
-	Iterator end()
+	Iterator<T> end()
 	{
 		return nullptr;
 	}
 
-	friend class Iterator;
-	friend ForwardList operator+(const ForwardList& left, const  ForwardList& right);
-
+	friend class Iterator<T>;
+	friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
 };
-ForwardList operator+(const ForwardList& left, const  ForwardList& right)
+
+template<typename T>
+ForwardList<T> operator+(const ForwardList<T>& left, const  ForwardList<T>& right)
 {
 	ForwardList cat = left;
-	for (Element* Temp = right.Head; Temp; Temp = Temp->pNext) 
+	for (Element<T>* Temp = right.Head; Temp; Temp = Temp->pNext) 
 		cat.push_back(Temp->Data);
 	return cat;
 }
 
-#define BASE_CHECK
+//#define BASE_CHECK
 //#define OPERATOR_PLUS_CHECK
 //#define RANGE_BASED_FOR_ARRAY
-//#define RANGE_BASED_FOR_LIST
+#define RANGE_BASED_FOR_LIST
 
 void main()
 {
@@ -202,7 +201,7 @@ void main()
 #ifdef BASE_CHECK
 	int n;
 	std::cout << "Введите размер списка: "; std::cin >> n;
-	ForwardList list;
+	ForwardList<int> list;
 	for (int i = 0; i < n; i++)
 	{
 		list.push_front(rand() % 100);
@@ -211,16 +210,16 @@ void main()
 	list = list;
 	list.print();
 
-	/*int value;
+	int value;
 	int index;
-	cout << "Введите индекс элемента: "; cin >> index;
-	cout << "Введите значение элемента: "; cin >> value;
-	list.insert(value, index);
+	std::cout << "Введите индекс элемента: "; std::cin >> index;
+	std::cout << "Введите значение элемента: "; std::cin >> value;
+	list.insert(index, value);
 	list.print();
 
-	cout << "Введите индекс элемента: "; cin >> index;
+	std::cout << "Введите индекс элемента: "; std::cin >> index;
 	list.erase(index);
-	list.print();*/
+	list.print();
 
 	//ForwardList list2 = list;	//Copy constructor
 	//ForwardList list2;
@@ -270,7 +269,7 @@ void main()
 
 #ifdef RANGE_BASED_FOR_LIST
 
-	ForwardList list = {3, 5, 8, 13, 21};
+	ForwardList<int> list = {3, 5, 8, 13, 21};
 	for ( int i : list) 
 		std::cout << i << "\t" << std::endl;
 #endif // RANGE_BASED_FOR_LIST
