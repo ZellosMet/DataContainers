@@ -1,12 +1,13 @@
 ﻿#include<iostream>
 
 #define delim "\n----------------------------------------------------------------\n"
+template<typename T> class List;
+template<typename T> class Element;
+template<typename T> List<T> operator+(const List<T>& left, const List<T>& right);
 
-template<typename T>
-class List
+template<typename T>class List
 {
-	template<typename T>
-	class Element
+	template<typename T>class Element
 	{
 		T Data;
 		Element<T>* pNext;
@@ -21,13 +22,14 @@ class List
 		{
 			std::cout << "EDestructor:\t" << this << std::endl;
 		}
-		friend class List;
+		friend class List<T>;
+		template<typename T>friend List<T> operator+(const List<T>& left, const List<T>& right);
 	};
 	Element<T>* Head;
 	Element<T>* Tail;  //сразу же объявляем элементы класса типа Element*
 	unsigned int size;
 
-class constBaseIterator
+	template<typename T>class constBaseIterator
 	{
 	protected:
 		Element<T>* Temp;
@@ -40,11 +42,11 @@ class constBaseIterator
 		{
 			std::cout << "BItDestructor:\t" << this << std::endl;
 		}
-		bool operator==(const constBaseIterator& other)const
+		bool operator==(const constBaseIterator<T>& other)const
 		{
 			return this->Temp == other.Temp;
 		}
-		bool operator!=(const constBaseIterator& other)const
+		bool operator!=(const constBaseIterator<T>& other)const
 		{
 			return this->Temp != other.Temp;	
 		}
@@ -56,10 +58,11 @@ class constBaseIterator
 public:
 
 //Iterators
-class constIterator :public constBaseIterator
+
+template<typename T>class constIterator :public constBaseIterator<T>
 	{
 	public:
-		constIterator(Element<T>* Temp = nullptr) : constBaseIterator(Temp)
+		constIterator(Element<T>* Temp = nullptr) : constBaseIterator<T>(Temp)
 		{
 			std::cout << "IConstructor:\t" << this << std::endl;
 		}
@@ -67,34 +70,34 @@ class constIterator :public constBaseIterator
 		{
 			std::cout << "IDestructor:\t" << this << std::endl;
 		}
-		constIterator& operator++()
+		constIterator<T>& operator++()
 		{
 			this->Temp = this->Temp->pNext;
 			return *this;
 		}
-		constIterator operator++(int)
+		constIterator<T> operator++(int)
 		{
-			constIterator old = *this;
+			constIterator<T> old = *this;
 			this->Temp = this->Temp->pNext;
 			return old;
 		}
-		constIterator& operator--()
+		constIterator<T>& operator--()
 		{
 			this->Temp = this->Temp->pPrev;
 			return *this;
 		}
-		constIterator operator--(int)
+		constIterator<T> operator--(int)
 		{
-			constIterator old = *this;
+			constIterator<T> old = *this;
 			this->Temp = this->Temp->pPrev;
 			return old;
 		}
 	};
 
-class constReversIterator:public constBaseIterator
+template<typename T>class constReversIterator: public constBaseIterator<T>
 {
 public:
-	constReversIterator(Element<T>* Temp = nullptr) : constBaseIterator(Temp)
+	constReversIterator(Element<T>* Temp = nullptr) : constBaseIterator<T>(Temp)
 	{
 		std::cout << "RIConstructor:\t" << this << std::endl;
 	}
@@ -102,81 +105,83 @@ public:
 	{
 		std::cout << "RIDestructor:\t" << this << std::endl;
 	}
-	constReversIterator& operator++()
+	constReversIterator<T>& operator++()
 	{
 		this->Temp = this->Temp->pPrev;
 		return *this;
 	}
-	constReversIterator operator++(int)
+	constReversIterator<T> operator++(int)
 	{
-		constReversIterator old = *this;
+		constReversIterator<T> old = *this;
 		this->Temp = this->Temp->pPrev;
 		return old;
 	}
-	constReversIterator& operator--()
+	constReversIterator<T>& operator--()
 	{
 		this->Temp = this->Temp->pNext;
 		return *this;
 	}
-	constReversIterator operator--(int)
+	constReversIterator<T> operator--(int)
 	{
-		constReversIterator old = *this;
+		constReversIterator<T> old = *this;
 		this->Temp = this->Temp->pNext;
 		return old;
 	}
 };
 
-class Iterator :public constIterator
+template<typename T>class Iterator :public constIterator<T>
 {
 public:
-	Iterator(Element<T>* Temp = nullptr) : constIterator(Temp) {}
+	Iterator(Element<T>* Temp = nullptr) : constIterator<T>(Temp) {}
 	T& operator*()
 	{
 		return this->Temp->Data;
 	}
 };
-class ReversIterator :public constReversIterator
+
+template<typename T>class ReversIterator :public constReversIterator<T>
 {
 public:
-	ReversIterator(Element<T>* Temp = nullptr) : constReversIterator(Temp) {}
+	ReversIterator(Element<T>* Temp = nullptr) : constReversIterator<T>(Temp) {}
 	T& operator*()
 	{
 		return this->Temp->Data;
 	}
 };
-	const constIterator cbegin()const
+
+	constIterator<T> cbegin()const
 	{
 		return Head;
 	}
-	const constIterator cend()const
+	constIterator<T> cend()const
+	{
+		return nullptr;
+	}
+	constReversIterator<T> rcbegin()const
+	{
+		return Tail;
+	}
+	constReversIterator<T> rcend()const
+	{
+		return nullptr;
+	}
+	Iterator<T> begin()
+	{
+		return Head;
+	}
+	Iterator<T> end()
+	{
+		return nullptr;
+	}
+	ReversIterator<T> rbegin()
+	{
+		return Tail;
+	}
+	ReversIterator<T> rend()
 	{
 		return nullptr;
 	}
 
-	constReversIterator rcbegin()const
-	{
-		return Tail;
-	}
-	constReversIterator rcend()const
-	{
-		return nullptr;
-	}
-	Iterator begin()
-	{
-		return Head;
-	}
-	constIterator end()
-	{
-		return nullptr;
-	}
-	ReversIterator rbegin()
-	{
-		return Tail;
-	}
-	ReversIterator rend()
-	{
-		return nullptr;
-	}
 	List()
 	{
 		Head = Tail = nullptr;
@@ -186,7 +191,7 @@ public:
 	{
 		for (T i : il) push_back(i);
 	}
-	List(const List& other):List()
+	List(const List<T>& other):List()
 	{
 		*this = other;
 	}
@@ -198,7 +203,7 @@ public:
 	}
 
 						//Operators
-	List& operator=(const List& other)
+	List<T>&operator=(const List<T>& other)
 	{
 		if (this == &other) return *this;
 		while (Head)pop_front();
@@ -292,11 +297,10 @@ public:
 		for (Element<T>* Temp = Tail; Temp; Temp = Temp->pPrev)
 			std::cout << Temp->pPrev << "\t" << Temp->Data << "\t" << Temp->pNext << std::endl;
 	}
-	friend List<T> operator+(const List<T>& left, const List<T>& right);
+	template<typename T>friend List<T> operator+(const List<T>& left, const List<T>& right);
 };
 
-template<typename T>
-List<T> operator+(const List<T>& left, const List<T>& right)
+template<typename T>List<T> operator+(const List<T>& left, const List<T>& right)
 {
 	List<T> cat = left;
 	for (List<T>::template constIterator<T> it = right.cbegin(); it != right.cend(); ++it)
@@ -331,11 +335,11 @@ void main()
 
 	//List<int> list = { 3,5,8,13,21 };
 	List<char> list = { 'H','e','l','l','o'};
-	for (List<char>::constIterator i = list.cbegin(); i != list.cend(); ++i) std::cout << *i << "\t";
+	for (List<char>::template constIterator<char> i = list.cbegin(); i != list.cend(); ++i) std::cout << *i << "\t";
 	std::cout << delim;
-	for (List<char>::constReversIterator i = list.rcbegin(); i != list.rcend(); ++i) std::cout << *i << "\t";
+	for (List<char>::template constReversIterator<char> i = list.rcbegin(); i != list.rcend(); ++i) std::cout << *i << "\t";
 	List<char> list3 = list + list;
-	for (int i : list3) std::cout << i << "\t";
-	for (List<char>::Iterator it = list3.begin(); it != list.end(); ++it) (*it) *= 10;
-	for (int i : list3) std::cout << i << "\t";
+	for (char i : list3) std::cout << i << "\t";
+	for (List<char>::template Iterator<char> it = list3.begin(); it != list.end(); ++it) (*it) *= 10;
+	for (char i : list3) std::cout << i << "\t";
 }

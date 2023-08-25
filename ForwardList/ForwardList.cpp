@@ -3,16 +3,15 @@
 template<typename T>class ForwardList;
 template<typename T>class Element;
 template<typename T>class Iterator;
-template<typename T> ForwardList<T> operator+(const ForwardList<T>& left, const  ForwardList<T>& right);
+template<typename T> ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
 
-template<typename T>
-class Element
+template<typename T> class Element
 {
 	T Data; //значение элемента
 	Element<T>* pNext; //адрес следующего элемента
 
 public:
-	Element(int Data, Element<T>* pNext = nullptr) :Data(Data), pNext(pNext)
+	Element(T Data, Element<T>* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
 		std::cout << "EConstructor:\t" << this << std::endl;
 	}
@@ -23,11 +22,11 @@ public:
 
 	friend class ForwardList<T>;
 	friend class Iterator<T>;
-	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
+	template<typename T> friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
 
 };
-template<typename T>
-class Iterator
+
+template<typename T> class Iterator
 {
 	Element<T>* Temp;
 public:
@@ -40,16 +39,16 @@ public:
 		std::cout << "IDestructor:\t" << this << std::endl;
 	}
 
-	Iterator& operator++()
+	Iterator<T>& operator++()
 	{
 		Temp = Temp->pNext;
 		return *this;
 	}
-	bool operator==(const Iterator& other)const
+	bool operator==(const Iterator<T>& other)const
 	{
 		return this->Temp == other.Temp;
 	}
-	bool operator!=(const Iterator& other)const
+	bool operator!=(const Iterator<T>& other)const
 	{
 		return this->Temp != other.Temp;
 	}
@@ -59,8 +58,7 @@ public:
 	}
 };
 
-template<typename T>
-class ForwardList
+template<typename T> class ForwardList
 {
 	Element<T>* Head; //Голова списка, содержит адрес начального элемента списка
 public:
@@ -71,14 +69,14 @@ public:
 	}
 	ForwardList(const std::initializer_list<T>& list)
 	{
-		for (int i : list) push_back(i);
+		for (T i : list) push_back(i);
 	}
-	ForwardList(const ForwardList& other):ForwardList()
+	ForwardList(const ForwardList<T>& other):ForwardList()
 	{
 		*this = other;
 		std::cout << "FLCopyConstructor:\t" << this << std::endl;
 	}
-	ForwardList(ForwardList&& other): ForwardList()
+	ForwardList(ForwardList<T>&& other): ForwardList()
 	{
 		*this = std::move(other); //функция move() принудительно вызывает MoveAssigment для объекта
 		std::cout << "FLMoveConstructor:\t" << this << std::endl;
@@ -89,7 +87,7 @@ public:
 			pop_front();
 		std::cout << "FLDestructor:\t" << this << std::endl;
 	}
-	ForwardList& operator=(const ForwardList& other)
+	ForwardList<T>& operator=(const ForwardList<T>& other)
 	{
 		if (this == &other) return *this;
 		while (Head) pop_front();
@@ -98,7 +96,7 @@ public:
 		std::cout << "FLCopyAssignment:\t" << this << std::endl;
 		return *this;
 	}
-	ForwardList& operator=(ForwardList&& other)
+	ForwardList<T>& operator=(ForwardList<T>&& other)
 	{
 		while (Head) pop_front();
 		Head = other.Head;
@@ -129,7 +127,7 @@ public:
 	}
 	void pop_back()
 	{
-		Element* Temp = Head;
+		Element<T>* Temp = Head;
 		while (Temp->pNext->pNext) Temp = Temp->pNext;
 		delete Temp->pNext;	
 		Temp->pNext = nullptr;
@@ -176,15 +174,13 @@ public:
 	{
 		return nullptr;
 	}
-
 	friend class Iterator<T>;
-	friend ForwardList operator+(const ForwardList& left, const ForwardList& right);
+	template<typename T> friend ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right);
 };
 
-template<typename T>
-ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right)
+template<typename T> ForwardList<T> operator+(const ForwardList<T>& left, const ForwardList<T>& right)
 {
-	ForwardList cat = left;
+	ForwardList<T> cat = left;
 	for (Element<T>* Temp = right.Head; Temp; Temp = Temp->pNext) 
 		cat.push_back(Temp->Data);
 	return cat;
