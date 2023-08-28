@@ -1,5 +1,4 @@
-﻿#include<iostream>
-#include"List_Header.h"
+﻿#include"List_Header.h"
 #include"List_Class.cpp"
 
 //#define BASE_CHECK
