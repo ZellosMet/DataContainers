@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClCompile Include="List2.cpp" />
     <ClCompile Include="List_Class.cpp" />
+    <ClCompile Include="templates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="List_Header.h" />
