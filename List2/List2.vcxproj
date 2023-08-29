@@ -132,7 +132,6 @@
   <ItemGroup>
     <ClCompile Include="List2.cpp" />
     <ClCompile Include="List_Class.cpp" />
-    <ClCompile Include="templates.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="List_Header.h" />

@@ -4,7 +4,7 @@
 #define delim "\n----------------------------------------------------------------\n"
 template<typename T> class List;
 template<typename T> class Element;
-template<typename T> List<T> operator+(const List<T>& left, const List<T>& right);
+//template<typename T> List<T> operator+(const List<T>& left, const List<T>& right);
 
 template<typename T>class List
 {
@@ -102,5 +102,5 @@ public:
 	void revprint()const;
 
 	//Friends
-	template<typename T>friend List<T> operator+(const List<T>& left, const List<T>& right);
+	template<typename T>List<T> friend operator+(const List<T>& left, const List<T>& right);
 };

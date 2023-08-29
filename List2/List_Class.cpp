@@ -1,5 +1,8 @@
 #include"List_Header.h"
-#include"templates.cpp"
+
+template class List<int>;
+template class List<double>;
+template class List<char>;
 
 template<typename T>List<T> operator+(const List<T>& left, const List<T>& right)
 {
