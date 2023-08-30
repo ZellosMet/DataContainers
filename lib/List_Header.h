@@ -2,9 +2,6 @@
 #include<iostream>
 
 #define delim "\n----------------------------------------------------------------\n"
-template<typename T> class List;
-template<typename T> class Element;
-//template<typename T> List<T> operator+(const List<T>& left, const List<T>& right);
 
 template<typename T>class List
 {
@@ -19,7 +16,6 @@ template<typename T>class List
 		Element(T Data, Element* pNext = nullptr, Element* pPrev = nullptr);
 		~Element();
 		friend class List<T>;
-		template<typename T>friend List<T> operator+(const List<T>& left, const List<T>& right);
 	} *Head, * Tail;
 	unsigned int size;
 	//Iterators
@@ -100,7 +96,6 @@ public:
 	//Methods
 	void print()const;
 	void revprint()const;
-
-	//Friends
-	template<typename T>List<T> friend operator+(const List<T>& left, const List<T>& right);
 };
+
+template<typename T>List<T> operator+(const List<T>& left, const List<T>& right);

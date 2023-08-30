@@ -4,14 +4,6 @@ template class List<int>;
 template class List<double>;
 template class List<char>;
 
-template<typename T>List<T> operator+(const List<T>& left, const List<T>& right)
-{
-	List<T> cat = left;
-	for (typename List<T>::constIterator it = right.cbegin(); it != right.cend(); ++it)
-		cat.push_back(*it);
-	return cat;
-}
-
 template<typename T>typename List<T>::constIterator List<T>::cbegin()const
 {
 	return Head;
@@ -289,4 +281,12 @@ template<typename T> List<T>::ReversIterator::ReversIterator(Element* Temp) : co
 template<typename T> T& List<T>::ReversIterator::operator*()
 {
 	return constBaseIterator::Temp->Data;
+}
+
+template<typename T>List<T> operator+(const List<T>& left, const List<T>& right)
+{
+	List<T> cat = left;
+	for (typename List<T>::constIterator it = right.cbegin(); it != right.cend(); ++it)
+		cat.push_back(*it);
+	return cat;
 }
