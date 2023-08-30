@@ -29,13 +29,14 @@ void main()
 #ifdef LOOP_CHECK
 	//List<int> list = { 3,5,8,13,21 };
 	List<char> list = { 'H','e','l','l','o' };
+	list.push_back(' ');
 	List<char> list2 = { 'W','o','r','l','d' };
 	for (List<char>::constIterator i = list.cbegin(); i != list.cend(); ++i) std::cout << *i << "\t";
 	std::cout << delim;
 	for (List<char>::constIterator i = list2.cbegin(); i != list2.cend(); ++i) std::cout << *i << "\t";
 	std::cout << delim;
 	List<char> list3 = list + list2;
-	for (List<
-	char>::Iterator i = list3.begin(); i != list.end(); ++i) std::cout << *i;
+	list.push_back('!');
+	for (List<char>::Iterator i = list3.begin(); i != list.end(); ++i) std::cout << *i;
 #endif // LOOP_CHECK
 }
