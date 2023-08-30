@@ -3,6 +3,7 @@
 
 #define delim "\n----------------------------------------------------------------\n"
 
+
 template<typename T>class List
 {
 	//Element
