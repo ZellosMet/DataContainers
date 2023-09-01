@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 
 void Elevator(int floor);
 int Factorial(int n);
@@ -8,7 +8,7 @@ double Fibonacci(int n);
 //#define ELEVATOR
 //#define FACTORIAL
 //#define POWER
-#define FIBONACCI
+//#define FIBONACCI
 
 void main()
 {
@@ -16,28 +16,28 @@ void main()
 	int n, a;
 
 #ifdef ELEVATOR
-	std::cout << "Ââåäèòå íîìåð ýòîæà: "; std::cin >> n;
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð½Ð¾Ð¼ÐµÑ€ ÑÑ‚Ð¾Ð¶Ð°: "; std::cin >> n;
 	elevator(n);
 #endif 
 
 #ifdef FACTORIAL
-	std::cout << "Ââåäèòå ÷èñëî: "; std::cin >> n;
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¾: "; std::cin >> n;
 	std::cout << n << "! = " << Factorial(n);
 #endif 
 
 #ifdef  POWER
-	std::cout << "Ââåäèòå ÷èñëî è ñòåïåíü: "; std::cin >> a >> n;
-	std::cout << "×èñëî " << a << " â ñòåïåíè " << n << " = " << Power(a, n);
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ñ‡Ð¸ÑÐ»Ð¾ Ð¸ ÑÑ‚ÐµÐ¿ÐµÐ½ÑŒ: "; std::cin >> a >> n;
+	std::cout << "Ð§Ð¸ÑÐ»Ð¾ " << a << " Ð² ÑÑ‚ÐµÐ¿ÐµÐ½Ð¸ " << n << " = " << Power(a, n);
 #endif
 
 #ifdef FIBONACCI
-	std::cout << "Ââåäèòå ñêîëüêî ÷èñåë ðÿäà Ôèáîíà÷÷è íóæíî âûâåñòè: "; std::cin >> n;
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ ÑÐºÐ¾Ð»ÑŒÐºÐ¾ Ñ‡Ð¸ÑÐµÐ» Ñ€ÑÐ´Ð° Ð¤Ð¸Ð±Ð¾Ð½Ð°Ñ‡Ñ‡Ð¸ Ð½ÑƒÐ¶Ð½Ð¾ Ð²Ñ‹Ð²ÐµÑÑ‚Ð¸: "; std::cin >> n;
 	for (int i = 1; i <= n; i++)
 		std::cout << Fibonacci(i) << "\t";
 
 	std::cout << std::endl;
 
-	std::cout << "Ââåäèòå ïðåäåë ðÿäà Ôèáîíà÷÷è: "; std::cin >> n;
+	std::cout << "Ð’Ð²ÐµÐ´Ð¸Ñ‚Ðµ Ð¿Ñ€ÐµÐ´ÐµÐ» Ñ€ÑÐ´Ð° Ð¤Ð¸Ð±Ð¾Ð½Ð°Ñ‡Ñ‡Ð¸: "; std::cin >> n;
 	for (int i = 1; n >= Fibonacci(i); i++)
 		std::cout << Fibonacci(i) << "\t";
 #endif 
@@ -48,12 +48,12 @@ void Elevator(int floor)
 {
 	if (floor == 0)
 	{
-		std::cout << "Âû â ïîäâàëå" << std::endl;
+		std::cout << "Ð’Ñ‹ Ð² Ð¿Ð¾Ð´Ð²Ð°Ð»Ðµ" << std::endl;
 		return;
 	}
-	std::cout << "Âû íà " << floor << " ýòàæå\n";
+	std::cout << "Ð’Ñ‹ Ð½Ð° " << floor << " ÑÑ‚Ð°Ð¶Ðµ\n";
 	Elevator(floor - 1);
-	std::cout << "Âû íà " << floor << " ýòàæå\n";	
+	std::cout << "Ð’Ñ‹ Ð½Ð° " << floor << " ÑÑ‚Ð°Ð¶Ðµ\n";	
 }
 int Factorial(int n) 
 {
