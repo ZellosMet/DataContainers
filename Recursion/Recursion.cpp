@@ -17,7 +17,7 @@ void main()
 
 #ifdef ELEVATOR
 	std::cout << "Введите номер этажа: "; std::cin >> n;
-	elevator(n);
+	Elevator(n);
 #endif 
 
 #ifdef FACTORIAL
