@@ -16,7 +16,7 @@ void main()
 	int n, a;
 
 #ifdef ELEVATOR
-	std::cout << "Введите номер этожа: "; std::cin >> n;
+	std::cout << "Введите номер этажа: "; std::cin >> n;
 	elevator(n);
 #endif 
 
