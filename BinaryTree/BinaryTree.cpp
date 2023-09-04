@@ -73,8 +73,6 @@ public:
 		Element* pPrev = nullptr;
 		Element* root = Root;
 
-		if (root == nullptr) return;
-
 		while (root != nullptr && root->Data != Data)
 		{			
 			pPrev = root;
@@ -82,6 +80,8 @@ public:
 			else root = root->pRight;
 		}
 
+		if (root == nullptr) return;
+		
 		if (root->pLeft == nullptr && root->pRight == nullptr)
 		{
 			if (root != Root)
@@ -145,9 +145,6 @@ public:
 		for (int i = 0; i < depth; i++) 
 			std::cout << "  ";
 		std::cout << Root->Data << std::endl << std::endl;
-		for (int i = 0; i < depth; i++)
-			std::cout << "  ";
-			std::cout << "/" << " " << "\\" << std::endl;
 		tree_print_param(Root->pRight, depth + 1);
 	}
 
@@ -223,8 +220,8 @@ public:
 	}
 };
 
-#define BASE_BINARYTREE
-//#define BINARYTREE_HOME_WORK
+//#define BASE_BINARYTREE
+#define BINARYTREE_HOME_WORK
 
 void main()
 {
