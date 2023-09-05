@@ -164,7 +164,7 @@ public:
 	//							Metods 
 
 
-	void insert(int Data)
+	void insert(int Data=0)
 	{
 		insert_param(Data, Root);
 	}
@@ -209,7 +209,24 @@ public:
 	{
 		return depth_param(Root);
 	}
+
 };
+
+template<class T> T measure(Tree& t, T (Tree::*f)())
+{
+	clock_t start = clock();
+	(t.*f)();
+	clock_t end = clock();
+	std::cout << "Метод отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд, результат: ";
+	return (t.*f)();
+}
+void measure(Tree& t, void (Tree::*f)())
+{
+	clock_t start = clock();
+	(t.*f)();
+	clock_t end = clock();
+	std::cout << "\nМетод отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
+}
 
 class UniqueTree : public Tree
 {
@@ -236,66 +253,94 @@ public:
 	}
 };
 
-//#define BASE_BINARYTREE
-#define BINARYTREE_HOME_WORK
+//#define BASE_CHECK
+//#define DEPTH_CHECK
 
 void main()
 {
 	setlocale(LC_ALL, "");
 	int n;
-	std::cout << "Введите размер дерева: "; std::cin >> n;
 
-#ifdef BASE_BINARYTREE
-
-	std::cout << "Введите размер дерева: "; std::cin >> n;
-	clock_t start = clock();
+#ifdef BASE_CHECK
+	std::cout << "Введите число элементов: "; std::cin >> n;
 	Tree tree;
-	for (int i = 0; i < n; i++)
-		tree.insert(rand() % 100);
-	tree.print();
+	clock_t start = clock();
+	for (int i = 0; i < n; i++) tree.insert(rand() % 100);
+
+	measure(tree, &Tree::print);
+	std::cout << measure(tree, &Tree::count) << std::endl;
+	std::cout << measure(tree, &Tree::Avg) << std::endl;
+
+	clock_t end = clock();
+	std::cout << "Дерево заполнилось за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
+	//tree.Clear();
+	//tree.print();
 	std::cout << std::endl;
-	std::cout << "Минимальное значение в дереве: " << tree.minValue() << std::endl;
-	std::cout << "Минимальное значение в дереве: " << tree.maxValue() << std::endl;
-	std::cout << "Сумма элементов дерева: " << tree.sum() << std::endl;
-	std::cout << "Количество элементов в дереве: " << tree.count() << std::endl;
-	std::cout << "Среднее-арифметическое элементов дерева: " << tree.Avg() << std::endl;
-	std::cout << std::endl;
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	std::cout << "Минимальный элемент дерева: ";
+	start = clock();
+	int min = tree.minValue();
+	end = clock();
+	std::cout << min << ", расчитано за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	std::cout << "Максимальный элемент дерева: ";
+	start = clock();
+	int max = tree.maxValue();
+	end = clock();
+	std::cout << max << ", расчитано за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	std::cout << "Сумма элементов дерева: ";
+	start = clock();
+	int sum = tree.sum();
+	end = clock();
+	std::cout << sum << ", расчитано за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	std::cout << "Количество элементов дерева: ";
+	start = clock();
+	int count = tree.count();
+	end = clock();
+	std::cout << count << ", расчитано за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	std::cout << "Среднее-арифметическое элементов: ";
+	start = clock();
+	double avg = tree.Avg();
+	end = clock();
+	std::cout << avg << ", расчитано за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	std::cout << "Глубина дерева: ";
+	start = clock();
+	int depth = tree.depth();
+	end = clock();
+	std::cout << depth << ", расчитано за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
+	/////////////////////////////////////////////////////////////////////////////////////////////////	
 
 	UniqueTree u_tree;
 	for (int i = 0; i < n; i++)
-		u_tree.insert(rand() % 100, u_tree.getRoot());
-	u_tree.print();
+	{
+		u_tree.insert(rand() % 100);
+	}
+	//u_tree.print();
 	std::cout << std::endl;
-	std::cout << "Минимальное значение в дереве: " << u_tree.minValue() << std::endl;
-	std::cout << "Минимальное значение в дереве: " << u_tree.maxValue() << std::endl;
+	std::cout << "Минимальный элемент дерева: " << u_tree.minValue() << std::endl;
+	std::cout << "Максимальный элемент дерева: " << u_tree.maxValue() << std::endl;
 	std::cout << "Сумма элементов дерева: " << u_tree.sum() << std::endl;
-	std::cout << "Количество элементов в дереве: " << u_tree.count() << std::endl;
-	std::cout << "Среднее-арифметическое элементов дерева: " << u_tree.Avg() << std::endl;
-	std::cout << std::endl;
+	std::cout << "Количество элементов дерева: " << u_tree.count() << std::endl;
+	std::cout << "Среднее-арифметическое элементов: " << u_tree.Avg() << std::endl;
+	std::cout << "Глубина дерева: " << u_tree.depth() << std::endl;
+#endif // BASE_CHECK
 
-	clock_t end = clock();
-	std::cout << "Время работы кода: " << (double)(end - start) / CLOCKS_PER_SEC << " секунды" << std::endl;
-
-#endif // BASE_BINARYTREE
-	
-#ifdef BINARYTREE_HOME_WORK
-
-	clock_t start = clock();	
-
-	Tree tree;// = { 50, 25, 75, 16, 32, 64, 90 };
-	for (int i = 0; i < n; i++)
-		tree.insert(rand() % 100);
+#ifdef DEPTH_CHECK
+	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29 };
 	tree.print();
-	//tree.insert(28);
-	std::cout << std::endl;
-	std::cout << "Глубина дерева: " << tree.depth();
-	std::cout << std::endl;
-	//tree.erase(13);
-	//tree.tree_print();
-	std::cout << std::endl;
+	std::cout << "Глубина дерева: " << tree.depth() << std::endl;
+#endif // DEPTH_CHECK
 
-	clock_t end = clock();
-	std::cout << "Время работы кода: " << (double)(end - start) / CLOCKS_PER_SEC << " секунды" << std::endl;
+	std::cout << "Введите число элементов: "; std::cin >> n;
+	Tree tree;
+	
+	for (int i = 0; i < n; i++) tree.insert(rand() % 100);
 
-#endif // BINARYTREE_HOME_WORK
-};	
+	measure(tree, &Tree::print);
+	std::cout << measure(tree, &Tree::count) << std::endl;
+	std::cout << measure(tree, &Tree::Avg) << std::endl;
+}
