@@ -217,7 +217,7 @@ public:
 template<class T> T measure(Tree& t, T (Tree::*f)())
 {
 	clock_t start = clock();
-	(t.*f)();
+	T res = (t.*f)();
 	clock_t end = clock();
 	std::cout << "Метод отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд, результат: ";
 	return (t.*f)();
@@ -229,7 +229,7 @@ void measure(Tree& t, void (Tree::*f)())
 	clock_t end = clock();
 	std::cout << "\nМетод отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
 }
-void measure(Tree& t, void (Tree::* f)(int), int Data)
+void measure(Tree& t, void (Tree::*f)(int), int Data)
 {
 	clock_t start = clock();
 	(t.*f)(Data);
