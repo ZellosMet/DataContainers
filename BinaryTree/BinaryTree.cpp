@@ -1,6 +1,8 @@
 ﻿#include<iostream>
 #include<ctime>
 
+#define delim "\n-------------------------------------------------------------------------\n"
+
 class Tree
 {
 protected:
@@ -227,6 +229,13 @@ void measure(Tree& t, void (Tree::*f)())
 	clock_t end = clock();
 	std::cout << "\nМетод отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
 }
+void measure(Tree& t, void (Tree::* f)(int), int Data)
+{
+	clock_t start = clock();
+	(t.*f)(Data);
+	clock_t end = clock();
+	std::cout << "Метод отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд";
+}
 
 class UniqueTree : public Tree
 {
@@ -339,8 +348,12 @@ void main()
 	Tree tree;
 	
 	for (int i = 0; i < n; i++) tree.insert(rand() % 100);
-
+	std::cout << delim;
 	measure(tree, &Tree::print);
+	std::cout << delim;
 	std::cout << measure(tree, &Tree::count) << std::endl;
+	std::cout << delim;
+	measure(tree, &Tree::erase, 1);
+	std::cout << delim;
 	std::cout << measure(tree, &Tree::Avg) << std::endl;
 }
