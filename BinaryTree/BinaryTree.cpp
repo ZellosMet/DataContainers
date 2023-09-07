@@ -1,5 +1,6 @@
 ﻿#include<iostream>
 #include<ctime>
+#include<iomanip>
 
 #define delim "\n-------------------------------------------------------------------------\n"
 
@@ -57,51 +58,6 @@ protected:
 				}
 			}
 		}
-
-/*MyCode
-		Element* pPrev = nullptr;
-		Element* root = Root;
-
-		while (root != nullptr && root->Data != Data)
-		{
-			pPrev = root;
-			if (Data < root->Data) root = root->pLeft;
-			else root = root->pRight;
-		}
-
-		if (root == nullptr) return;
-
-		if (root->pLeft == nullptr && root->pRight == nullptr)
-		{
-			if (root != Root)
-			{
-				if (pPrev->pLeft == root) pPrev->pLeft = nullptr;
-				else pPrev->pRight = nullptr;
-			}
-			else Root = nullptr;
-			delete root;
-		}
-		else if (root->pLeft && root->pRight)
-		{
-			Element* tmp = root;
-			while (tmp->pLeft != nullptr) 
-				tmp = root->pLeft;
-			int tmp_data = tmp->Data;
-			erase_param(tmp_data, root);
-			root->Data = tmp_data;
-		}
-		else
-		{
-			Element* pNext = (root->pLeft) ? root->pLeft : root->pRight;
-			if (root != Root)
-			{
-				if (root == pPrev->pLeft) pPrev->pLeft = pNext;
-				else pPrev->pRight = pNext;
-			}
-			else Root = pNext;
-			delete root;
-		}
-	*/
 	}
 	void print_param(Element* Root)
 	{
@@ -110,14 +66,24 @@ protected:
 		std::cout << Root->Data << "\t";
 		print_param(Root->pRight);
 	}
+
 	void tree_print_param(Element* Root, int depth)
 	{
 		if (Root == nullptr) return;
-		tree_print_param(Root->pLeft, depth + 1);
-		for (int i = 0; i < depth; i++)
-			std::cout << "   ";
-		std::cout << Root->Data << std::endl << std::endl;
-		tree_print_param(Root->pRight, depth + 1);
+		{
+			if (Root->pRight) 
+				tree_print_param(Root->pRight, depth + 4);
+			if (depth) 
+				std::cout << std::setw(depth) << ' ';
+			if (Root->pRight) 
+				std::cout << " /\n" << std::setw(depth) << ' ';
+			std::cout << Root->Data << "\n ";
+			if (Root->pLeft) 
+			{
+				std::cout << std::setw(depth) << ' ' << " \\\n";
+				tree_print_param(Root->pLeft, depth + 4);
+			}
+		}
 	}
 	void insert_param(int Data, Element* Root)
 	{
@@ -298,9 +264,9 @@ void main()
 	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29 };
 
 	tree.print();
-	tree.erase(50);
+	//tree.erase(50);
 	std::cout << delim;
-	tree.print();
+	tree.tree_print();
 	
 /*
 	UniqueTree u_tree;
