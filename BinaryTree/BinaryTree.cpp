@@ -74,18 +74,18 @@ protected:
 				}
 			}
 	}
-	void balance_param(Element*& Root)
-	{
-		if (Root == nullptr)return;
-		while (count_param(Root->pLeft) != count_param(Root->pRight) + 1 && count_param(Root->pLeft) !=count_param(Root->pRight))
-		{
-			int Temp = Root->Data;
-			erase_param(Temp, Root);
-			insert_param(Temp, Root);
-		} 
-		balance_param(Root->pLeft);
-		balance_param(Root->pRight);
-	}
+	//void balance_param(Element*& Root)
+	//{
+	//	if (Root == nullptr)return;
+	//	while (count_param(Root->pLeft) != count_param(Root->pRight) + 1 && count_param(Root->pLeft) !=count_param(Root->pRight))
+	//	{
+	//		int Temp = Root->Data;
+	//		erase_param(Temp, Root);
+	//		insert_param(Temp, Root);
+	//	} 
+	//	balance_param(Root->pLeft);
+	//	balance_param(Root->pRight);
+	//}
 
 	void print_param(Element* Root)
 	{
@@ -94,25 +94,59 @@ protected:
 		std::cout << Root->Data << "\t";
 		print_param(Root->pRight);
 	}
+	void depth_print_param(Element* Root, int Depth, int Width)const
+	{
+		if (Root == nullptr)
+		{
+			if (Depth == 0) 
+			{
+				std::cout.width(Width*pow(2,(this->depth() - Depth)/3));
+				std::cout << "";
+			}
+			return;
+		}
+		if (Depth == 0)
+		{	
+			std::cout.width(Width);
+			std::cout << Root->Data;
+			std::cout.width(Width);
+			std::cout << "";
+		}
+		depth_print_param(Root->pLeft, Depth - 1, Width);		
+		depth_print_param(Root->pRight, Depth - 1, Width);
+	}
 
-	void tree_print_param(Element* Root, int depth)
+	void tree_print_param(Element*  Root, int Width, int Depth = 0)
 	{
 		if (Root == nullptr) return;
-		{
-			if (Root->pRight)
-				tree_print_param(Root->pRight, depth + 4);
-			if (depth)
-				std::cout << std::setw(depth) << ' ';
-			if (Root->pRight)
-				std::cout << " /\n" << std::setw(depth) << ' ';
-			std::cout << Root->Data << "\n ";
-			if (Root->pLeft)
-			{
-				std::cout << std::setw(depth) << ' ' << " \\\n";
-				tree_print_param(Root->pLeft, depth + 4);
-			}
-		}
+		if (Depth >= this->depth())return;
+		depth_print_param(Root, Depth, Width/2);
+		std::cout << std::endl << std::endl;
+		tree_print_param(Root, Width/2, Depth + 1);
 	}
+	void balance_param(Element* Root)
+	{
+		if (Root == nullptr) return;
+		if (abs(count_param(Root->pLeft) - count_param(Root->pRight)) < 2) return;
+		if (count_param(Root->pLeft) < count_param(Root->pRight))
+		{
+			if (Root->pLeft) insert_param(Root->Data, Root->pLeft);
+			else Root->pLeft = new Element(Root->Data);
+			Root->Data = minValue_param(Root->pRight);
+			erase_param(minValue_param(Root->pRight), Root->pRight);
+		}
+		else 
+		{
+			if (Root->pRight)insert_param(Root->Data, Root->pRight);
+			else Root->pRight = new Element(Root->Data);
+			Root->Data = maxValue_param(Root->pLeft);
+			erase_param(maxValue_param(Root->pLeft), Root->pLeft);
+		}
+		balance_param(Root->pLeft);
+		balance_param(Root->pRight);
+		balance_param(Root);
+	}
+
 	int minValue_param(Element* Root)const
 	{
 		return Root == nullptr ? 0 : Root->pLeft == nullptr ? Root->Data : minValue_param(Root->pLeft);
@@ -131,8 +165,10 @@ protected:
 	}
 	int depth_param(Element* Root)const
 	{
-		if (Root == nullptr) return 0;
-		return Root->pLeft != nullptr ? 1 + depth_param(Root->pLeft) : 1 + depth_param(Root->pRight);
+		if (Root == nullptr)return 0;
+		int l_depth = depth_param(Root->pLeft) + 1;
+		int r_depth = depth_param(Root->pRight) + 1;
+		return	l_depth > r_depth ? l_depth : r_depth;
 	}
 	void clear_tree_param(Element* Root)
 	{
@@ -194,9 +230,13 @@ public:
 	{
 		print_param(Root);
 	}
+	void depth_print(int depth)
+	{
+		depth_print_param(Root, depth, 64);
+	}
 	void tree_print()
 	{
-		tree_print_param(Root, depth());
+		tree_print_param(Root, 64);
 	}
 	int minValue()const
 	{
@@ -267,9 +307,10 @@ public:
 	}
 };
 
-#define BASE_CHECK
+//#define BASE_CHECK
 //#define DEPTH_CHECK
 //#define MEASURE
+#define BALANCE_CHECK
 
 void main()
 {
@@ -322,9 +363,13 @@ void main()
 #endif // BASE_CHECK
 
 #ifdef DEPTH_CHECK
-	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29 };
+	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29};
 	tree.print();
-	std::cout << "Глубина дерева: " << tree.depth() << std::endl;
+	std::cout << "\nГлубина дерева: " << tree.depth() << std::endl;
+
+	//int depth;
+	//std::cout << "Введите глубину дерева: "; std::cin >> depth;
+	tree.tree_print();
 #endif // DEPTH_CHECK
 
 #ifdef MEASURE
@@ -340,5 +385,11 @@ void main()
 	measure("Метод AVG", tree, &Tree::Avg);
 	std::cout << delim;
 #endif // MEASURE
+
+	Tree tree = { 89,55,34,21,13,8,5,3 };
+	tree.tree_print();
+	std::cout << delim;
+	tree.balance();
+	tree.tree_print();
 
 }
