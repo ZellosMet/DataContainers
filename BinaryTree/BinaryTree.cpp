@@ -32,33 +32,58 @@ protected:
 		friend class UniqueTree;
 	}*Root;
 
+	void insert_param(int Data, Element* Root)
+	{
+		if (this->Root == nullptr)this->Root = new Element(Data);
+		if (Root == nullptr)return;
+		if (Data < Root->Data)
+		{
+			if (Root->pLeft == nullptr)Root->pLeft = new Element(Data);
+			else insert_param(Data, Root->pLeft);
+		}
+		else
+		{
+			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
+			else insert_param(Data, Root->pRight);
+		}
+	}
 	void erase_param(int Data, Element*& Root)
 	{
-		if (Root == nullptr) return;
-		erase_param(Data, Root->pLeft);
-		erase_param(Data, Root->pRight);
-		if (Data == Root->Data)
-		{
-			if (Root->pLeft == Root->pRight)
+			if (Root == nullptr)return;
+			erase_param(Data, Root->pLeft);
+			erase_param(Data, Root->pRight);
+			if (Data == Root->Data)
 			{
-				delete Root;
-				Root = nullptr;
-			}
-			else
-			{
-				if (count_param(Root->pLeft) > count_param(Root->pRight))
+				if (Root->pLeft == Root->pRight)
 				{
-					Root->Data = maxValue_param(Root->pLeft);
-					erase_param(maxValue_param(Root->pLeft), Root->pLeft);
+					delete Root;
+					Root = nullptr;
 				}
 				else
 				{
-					Root->Data = minValue_param(Root->pLeft);
-					erase_param(minValue_param(Root->pLeft), Root->pLeft);
+					if (count_param(Root->pLeft) > count_param(Root->pRight))
+					{
+						Root->Data = maxValue_param(Root->pLeft);
+						erase_param(maxValue_param(Root->pLeft), Root->pLeft);
+					}
+					else
+					{
+						Root->Data = minValue_param(Root->pRight);
+						erase_param(minValue_param(Root->pRight), Root->pRight);
+					}
 				}
 			}
-		}
 	}
+	void balance_param(Element*& Root)
+	{
+		while (count_param(Root->pLeft) != count_param(Root->pRight))
+		{
+			int Temp = Root->Data;
+			erase_param(Temp, Root);
+			insert_param(Temp, Root);
+		} 
+	}
+
 	void print_param(Element* Root)
 	{
 		if (Root == nullptr)return;
@@ -71,33 +96,18 @@ protected:
 	{
 		if (Root == nullptr) return;
 		{
-			if (Root->pRight) 
+			if (Root->pRight)
 				tree_print_param(Root->pRight, depth + 4);
-			if (depth) 
+			if (depth)
 				std::cout << std::setw(depth) << ' ';
-			if (Root->pRight) 
+			if (Root->pRight)
 				std::cout << " /\n" << std::setw(depth) << ' ';
 			std::cout << Root->Data << "\n ";
-			if (Root->pLeft) 
+			if (Root->pLeft)
 			{
 				std::cout << std::setw(depth) << ' ' << " \\\n";
 				tree_print_param(Root->pLeft, depth + 4);
 			}
-		}
-	}
-	void insert_param(int Data, Element* Root)
-	{
-		if (this->Root == nullptr) this->Root = new Element(Data);
-		if (Root == nullptr) return;
-		if (Data < Root->Data)
-		{
-			if (Root->pLeft == nullptr) Root->pLeft = new Element(Data);
-			else insert_param(Data, Root->pLeft);
-		}
-		else
-		{
-			if (Root->pRight == nullptr) Root->pRight = new Element(Data);
-			else insert_param(Data, Root->pRight);
 		}
 	}
 	int minValue_param(Element* Root)const
@@ -143,9 +153,9 @@ public:
 #endif // DEBUG
 
 	}
-	Tree(const std::initializer_list<int>& list):Tree()
+	Tree(const std::initializer_list<int>& list) :Tree()
 	{
-		for (int i : list) 
+		for (int i : list)
 			insert(i);
 	}
 	~Tree()
@@ -160,21 +170,25 @@ public:
 	//							Metods 
 
 
-	void insert(int Data=0)
+	void insert(int Data = 0)
 	{
 		insert_param(Data, Root);
 	}
 	void erase(int Data)
 	{
 		erase_param(Data, Root);
-	}	
+	}
+	void balance()
+	{
+		balance_param(Root);
+	}
 	void clear_tree()
-	{		
+	{
 		clear_tree_param(Root);
 		Root = nullptr;
 	}
 	void print()
-	{		
+	{
 		print_param(Root);
 	}
 	void tree_print()
@@ -208,7 +222,7 @@ public:
 
 };
 
-template<class T> void measure(const char* msg, Tree& t, T (Tree::*f)()const)
+template<class T> void measure(const char* msg, Tree& t, T(Tree::* f)()const)
 {
 	std::cout << msg;
 	clock_t start = clock();
@@ -216,7 +230,7 @@ template<class T> void measure(const char* msg, Tree& t, T (Tree::*f)()const)
 	clock_t end = clock();
 	std::cout << "отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд, результат: " << res;
 }
-void measure(const char* msg, Tree& t, void (Tree::*f)(int), int Data)
+void measure(const char* msg, Tree& t, void (Tree::* f)(int), int Data)
 {
 	std::cout << msg;
 	clock_t start = clock();
@@ -263,26 +277,53 @@ void main()
 	//std::cout << "Введите число элементов: "; std::cin >> n;	
 	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29 };
 
-	tree.print();
+	//tree.print();
 	//tree.erase(50);
+	//std::cout << delim;
+	tree.tree_print();
+	//tree.balance();
+	std::cout << delim;
+	//tree.tree_print();
+	tree.insert(86);
+	tree.insert(89);
+	tree.insert(100);
+	tree.insert(74);
+	tree.insert(78);
+	tree.insert(99);
+	tree.insert(101);
+	/*
 	std::cout << delim;
 	tree.tree_print();
-	
-/*
-	UniqueTree u_tree;
-	for (int i = 0; i < n; i++)
-	{
-		u_tree.insert(rand() % 100);
-	}
-	//u_tree.print();
-	std::cout << std::endl;
-	std::cout << "Минимальный элемент дерева: " << u_tree.minValue() << std::endl;
-	std::cout << "Максимальный элемент дерева: " << u_tree.maxValue() << std::endl;
-	std::cout << "Сумма элементов дерева: " << u_tree.sum() << std::endl;
-	std::cout << "Количество элементов дерева: " << u_tree.count() << std::endl;
-	std::cout << "Среднее-арифметическое элементов: " << u_tree.Avg() << std::endl;
-	std::cout << "Глубина дерева: " << u_tree.depth() << std::endl;
-*/
+	std::cout << delim;
+	tree.balance();
+	tree.tree_print();
+	 */
+	//tree.erase(50);
+	//tree.insert(50);
+	tree.tree_print();
+	std::cout << delim;
+	tree.balance();
+	tree.tree_print();
+	std::cout << delim;
+	//tree.erase(16);
+	//tree.insert(16);
+	//tree.tree_print();
+
+	/*
+		UniqueTree u_tree;
+		for (int i = 0; i < n; i++)
+		{
+			u_tree.insert(rand() % 100);
+		}
+		//u_tree.print();
+		std::cout << std::endl;
+		std::cout << "Минимальный элемент дерева: " << u_tree.minValue() << std::endl;
+		std::cout << "Максимальный элемент дерева: " << u_tree.maxValue() << std::endl;
+		std::cout << "Сумма элементов дерева: " << u_tree.sum() << std::endl;
+		std::cout << "Количество элементов дерева: " << u_tree.count() << std::endl;
+		std::cout << "Среднее-арифметическое элементов: " << u_tree.Avg() << std::endl;
+		std::cout << "Глубина дерева: " << u_tree.depth() << std::endl;
+	*/
 
 #endif // BASE_CHECK
 
