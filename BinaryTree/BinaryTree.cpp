@@ -279,6 +279,7 @@ void main()
 #ifdef BASE_CHECK
 	//std::cout << "Введите число элементов: "; std::cin >> n;	
 
+	/*
 	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29};
 	tree.tree_print();
 	std::cout << delim;
@@ -294,6 +295,13 @@ void main()
 	tree.balance();
 	tree.tree_print();
 	std::cout << delim;
+	*/
+
+	Tree tree = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 };
+	tree.tree_print();
+	std::cout << delim;
+	tree.balance();
+	tree.tree_print();
 
 	/*
 		UniqueTree u_tree;
