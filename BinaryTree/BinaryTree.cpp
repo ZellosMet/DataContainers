@@ -76,12 +76,15 @@ protected:
 	}
 	void balance_param(Element*& Root)
 	{
-		while (count_param(Root->pLeft) != count_param(Root->pRight) + 1 && count_param(Root->pLeft) != count_param(Root->pRight))
+		if (Root == nullptr)return;
+		while (count_param(Root->pLeft) != count_param(Root->pRight) + 1 && count_param(Root->pLeft) !=count_param(Root->pRight))
 		{
 			int Temp = Root->Data;
 			erase_param(Temp, Root);
 			insert_param(Temp, Root);
 		} 
+		balance_param(Root->pLeft);
+		balance_param(Root->pRight);
 	}
 
 	void print_param(Element* Root)
@@ -275,15 +278,10 @@ void main()
 
 #ifdef BASE_CHECK
 	//std::cout << "Введите число элементов: "; std::cin >> n;	
-	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29};
 
-	//tree.print();
-	//tree.erase(50);
-	//std::cout << delim;
+	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29};
 	tree.tree_print();
-	//tree.balance();
 	std::cout << delim;
-	//tree.tree_print();
 	tree.insert(86);
 	tree.insert(89);
 	tree.insert(100);
@@ -291,23 +289,11 @@ void main()
 	tree.insert(78);
 	tree.insert(99);
 	tree.insert(101);
-	/*
-	std::cout << delim;
-	tree.tree_print();
-	std::cout << delim;
-	tree.balance();
-	tree.tree_print();
-	 */
-	//tree.erase(50);
-	//tree.insert(50);
 	tree.tree_print();
 	std::cout << delim;
 	tree.balance();
 	tree.tree_print();
 	std::cout << delim;
-	//tree.erase(16);
-	//tree.insert(16);
-	//tree.tree_print();
 
 	/*
 		UniqueTree u_tree;
