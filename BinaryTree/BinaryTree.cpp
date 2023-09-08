@@ -76,7 +76,7 @@ protected:
 	}
 	void balance_param(Element*& Root)
 	{
-		while (count_param(Root->pLeft) != count_param(Root->pRight))
+		while (count_param(Root->pLeft) != count_param(Root->pRight) + 1 && count_param(Root->pLeft) != count_param(Root->pRight))
 		{
 			int Temp = Root->Data;
 			erase_param(Temp, Root);
@@ -275,7 +275,7 @@ void main()
 
 #ifdef BASE_CHECK
 	//std::cout << "Введите число элементов: "; std::cin >> n;	
-	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29 };
+	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29};
 
 	//tree.print();
 	//tree.erase(50);
