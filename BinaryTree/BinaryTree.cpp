@@ -74,19 +74,6 @@ protected:
 				}
 			}
 	}
-	//void balance_param(Element*& Root)
-	//{
-	//	if (Root == nullptr)return;
-	//	while (count_param(Root->pLeft) != count_param(Root->pRight) + 1 && count_param(Root->pLeft) !=count_param(Root->pRight))
-	//	{
-	//		int Temp = Root->Data;
-	//		erase_param(Temp, Root);
-	//		insert_param(Temp, Root);
-	//	} 
-	//	balance_param(Root->pLeft);
-	//	balance_param(Root->pRight);
-	//}
-
 	void print_param(Element* Root)
 	{
 		if (Root == nullptr)return;
@@ -281,6 +268,14 @@ void measure(const char* msg, Tree& t, void (Tree::* f)(int), int Data)
 	clock_t end = clock();
 	std::cout << "отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд";
 }
+void measure(const char* msg, Tree& t, void (Tree::* f)())
+{
+	std::cout << msg;
+	clock_t start = clock();
+	(t.*f)();
+	clock_t end = clock();
+	std::cout << "отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд";
+}
 
 class UniqueTree : public Tree
 {
@@ -391,5 +386,4 @@ void main()
 	std::cout << delim;
 	tree.balance();
 	tree.tree_print();
-
 }
