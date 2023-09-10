@@ -2,257 +2,72 @@
 #include<ctime>
 #include<iomanip>
 
+template<class T> class Tree;
+template<typename T> class UniqueTree;
+
 #define delim "\n-------------------------------------------------------------------------\n"
 
-class Tree
+template<class T>class Tree
 {
 protected:
 	class Element
 	{
-		int  Data;
+		T  Data;
 		Element* pLeft;
 		Element* pRight;
 	public:
-		Element(int Data, Element* pLeft = nullptr, Element* pRaght = nullptr) : Data(Data), pLeft(pLeft), pRight(pRight)
-		{
-#ifdef DEBUG
-			std::cout << "EConstructor:\t" << this << std::endl;
-#endif // DEBUG
-
-		}
-		~Element()
-		{
-#ifdef DEBUG
-			std::cout << "EDestructor:\t" << this << std::endl;
-#endif // DEBUG
-
-		}
+		Element(T Data, Element* pLeft = nullptr, Element* pRaght = nullptr);
+		~Element();
 
 		friend class Tree;
-		friend class UniqueTree;
+		friend class UniqueTree<T>;
+
 	}*Root;
 
-	void insert_param(int Data, Element* Root)
-	{
-		if (this->Root == nullptr)this->Root = new Element(Data);
-		if (Root == nullptr)return;
-		if (Data < Root->Data)
-		{
-			if (Root->pLeft == nullptr)Root->pLeft = new Element(Data);
-			else insert_param(Data, Root->pLeft);
-		}
-		else
-		{
-			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
-			else insert_param(Data, Root->pRight);
-		}
-	}
-	void erase_param(int Data, Element*& Root)
-	{
-			if (Root == nullptr)return;
-			erase_param(Data, Root->pLeft);
-			erase_param(Data, Root->pRight);
-			if (Data == Root->Data)
-			{
-				if (Root->pLeft == Root->pRight)
-				{
-					delete Root;
-					Root = nullptr;
-				}
-				else
-				{
-					if (count_param(Root->pLeft) > count_param(Root->pRight))
-					{
-						Root->Data = maxValue_param(Root->pLeft);
-						erase_param(maxValue_param(Root->pLeft), Root->pLeft);
-					}
-					else
-					{
-						Root->Data = minValue_param(Root->pRight);
-						erase_param(minValue_param(Root->pRight), Root->pRight);
-					}
-				}
-			}
-	}
-	void print_param(Element* Root)
-	{
-		if (Root == nullptr)return;
-		print_param(Root->pLeft);
-		std::cout << Root->Data << "\t";
-		print_param(Root->pRight);
-	}
-	void depth_print_param(Element* Root, int Depth, int Width)const
-	{
-		if (Root == nullptr)
-		{
-			if (Depth == 0) 
-			{
-				std::cout.width(Width*pow(2,(this->depth() - Depth)/3));
-				std::cout << "";
-			}
-			return;
-		}
-		if (Depth == 0)
-		{	
-			std::cout.width(Width);
-			std::cout << Root->Data;
-			std::cout.width(Width);
-			std::cout << "";
-		}
-		depth_print_param(Root->pLeft, Depth - 1, Width);		
-		depth_print_param(Root->pRight, Depth - 1, Width);
-	}
+	void insert(T Data, Element* Root);
+	void erase(T Data, Element*& Root);
+	void clear_tree(Element* Root);
+	T depth(Element* Root)const;
+	T sum(Element* Root)const;
+	T count(Element* Root)const;
+	T minValue(Element* Root)const;
+	T maxValue(Element* Root)const;
+	void print(Element* Root);
+	void depth_print(Element* Root, int Depth, int Width)const;
+	void tree_print(Element* Root, int Width, int Depth = 0)const;
+	void balance(Element* Root);
 
-	void tree_print_param(Element*  Root, int Width, int Depth = 0)
-	{
-		if (Root == nullptr) return;
-		if (Depth >= this->depth())return;
-		depth_print_param(Root, Depth, Width/2);
-		std::cout << std::endl << std::endl;
-		tree_print_param(Root, Width/2, Depth + 1);
-	}
-	void balance_param(Element* Root)
-	{
-		if (Root == nullptr) return;
-		if (abs(count_param(Root->pLeft) - count_param(Root->pRight)) < 2) return;
-		if (count_param(Root->pLeft) < count_param(Root->pRight))
-		{
-			if (Root->pLeft) insert_param(Root->Data, Root->pLeft);
-			else Root->pLeft = new Element(Root->Data);
-			Root->Data = minValue_param(Root->pRight);
-			erase_param(minValue_param(Root->pRight), Root->pRight);
-		}
-		else 
-		{
-			if (Root->pRight)insert_param(Root->Data, Root->pRight);
-			else Root->pRight = new Element(Root->Data);
-			Root->Data = maxValue_param(Root->pLeft);
-			erase_param(maxValue_param(Root->pLeft), Root->pLeft);
-		}
-		balance_param(Root->pLeft);
-		balance_param(Root->pRight);
-		balance_param(Root);
-	}
-
-	int minValue_param(Element* Root)const
-	{
-		return Root == nullptr ? 0 : Root->pLeft == nullptr ? Root->Data : minValue_param(Root->pLeft);
-	}
-	int maxValue_param(Element* Root)const
-	{
-		return Root == nullptr ? 0 : Root->pRight == nullptr ? Root->Data : maxValue_param(Root->pRight);
-	}
-	int sum_param(Element* Root)const
-	{
-		return Root == nullptr ? 0 : sum_param(Root->pLeft) + sum_param(Root->pRight) + Root->Data;
-	}
-	int count_param(Element* Root)const
-	{
-		return Root == nullptr ? 0 : 1 + count_param(Root->pLeft) + count_param(Root->pRight);
-	}
-	int depth_param(Element* Root)const
-	{
-		if (Root == nullptr)return 0;
-		int l_depth = depth_param(Root->pLeft) + 1;
-		int r_depth = depth_param(Root->pRight) + 1;
-		return	l_depth > r_depth ? l_depth : r_depth;
-	}
-	void clear_tree_param(Element* Root)
-	{
-		if (Root == nullptr) return;
-		clear_tree_param(Root->pLeft);
-		clear_tree_param(Root->pRight);
-		delete Root;
-	}
 public:
-	Element* getRoot()
-	{
-		return Root;
-	}
+	
+//						Constructors
+	Tree();
+	Tree(const std::initializer_list<T>& list);
+	~Tree();
 
-	//						Constructors
-
-	Tree() :Root(nullptr)
-	{
-#ifdef DEBUG
-		std::cout << "EConstructor:\t" << this << std::endl;
-#endif // DEBUG
-
-	}
-	Tree(const std::initializer_list<int>& list) :Tree()
-	{
-		for (int i : list)
-			insert(i);
-	}
-	~Tree()
-	{
-		clear_tree();
-#ifdef DEBUG
-		std::cout << "TDestructor:\t" << this << std::endl;
-#endif // DEBUG
-
-	}
-
-	//							Metods 
-
-
-	void insert(int Data = 0)
-	{
-		insert_param(Data, Root);
-	}
-	void erase(int Data)
-	{
-		erase_param(Data, Root);
-	}
-	void balance()
-	{
-		balance_param(Root);
-	}
-	void clear_tree()
-	{
-		clear_tree_param(Root);
-		Root = nullptr;
-	}
-	void print()
-	{
-		print_param(Root);
-	}
-	void depth_print(int depth)
-	{
-		depth_print_param(Root, depth, 64);
-	}
-	void tree_print()
-	{
-		tree_print_param(Root, 64);
-	}
-	int minValue()const
-	{
-		return minValue_param(Root);
-	}
-	int maxValue()const
-	{
-		return maxValue_param(Root);
-	}
-	int sum()const
-	{
-		return sum_param(Root);
-	}
-	int count()const
-	{
-		return count_param(Root);
-	}
-	double Avg()const
-	{
-		return (double)sum() / count();
-	}
-	int depth()const
-	{
-		return depth_param(Root);
-	}
-
+//							Metods 
+	void insert(T Data);
+	void erase(T Data);
+	void clear_tree();
+	T count()const;
+	T sum()const;
+	T depth()const;
+	double Avg()const;
+	T minValue()const;
+	T maxValue()const;
+	void print()const;
+	void depth_print(int depth)const;
+	void tree_print()const;
+	void balance();
 };
 
-template<class T> void measure(const char* msg, Tree& t, T(Tree::* f)()const)
+template<typename T>class UniqueTree : public Tree<T>
+{
+	void insert(T Data, typename Tree<T>::Element* Root);
+public:
+	void insert(int Data);
+};
+
+template<typename T> void measure(const char* msg, Tree<T>& t, T(Tree<T>::* f)()const)
 {
 	std::cout << msg;
 	clock_t start = clock();
@@ -260,7 +75,7 @@ template<class T> void measure(const char* msg, Tree& t, T(Tree::* f)()const)
 	clock_t end = clock();
 	std::cout << "отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд, результат: " << res;
 }
-void measure(const char* msg, Tree& t, void (Tree::* f)(int), int Data)
+template<typename T> void measure(const char* msg, Tree<T>& t, void (Tree<T>::* f)(int), int Data)
 {
 	std::cout << msg;
 	clock_t start = clock();
@@ -268,7 +83,7 @@ void measure(const char* msg, Tree& t, void (Tree::* f)(int), int Data)
 	clock_t end = clock();
 	std::cout << "отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд";
 }
-void measure(const char* msg, Tree& t, void (Tree::* f)())
+template<typename T> void measure(const char* msg, Tree<T>& t, void (Tree<T>::* f)())
 {
 	std::cout << msg;
 	clock_t start = clock();
@@ -276,31 +91,244 @@ void measure(const char* msg, Tree& t, void (Tree::* f)())
 	clock_t end = clock();
 	std::cout << "отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд";
 }
-
-class UniqueTree : public Tree
+template<typename T> void UniqueTree<T>::insert(T Data, typename Tree<T>::Element* Root)
 {
-	void insert_param(int Data, Element* Root)
+	if (this->Root == nullptr) this->Root = new Tree::Element(Data);
+	if (Root == nullptr) return;
+	if (Data < Root->Data)
 	{
-		if (this->Root == nullptr) this->Root = new Element(Data);
-		if (Root == nullptr) return;
-		if (Data < Root->Data)
+		if (Root->pLeft == nullptr) Root->pLeft = new Tree::Element(Data);
+		else insert(Data, Root->pLeft);
+	}
+	else if (Data > Root->Data)
+	{
+		if (Root->pRight == nullptr) Root->pRight = new Tree::Element(Data);
+		else insert(Data, Root->pRight);
+	}
+}
+template<typename T> void UniqueTree<T>::insert(int Data)
+{
+	return insert(Data, Tree<T>::Root);
+}
+template<typename T > Tree<T>::Element::Element(T Data, Element* pLeft, Element* pRaght) : Data(Data), pLeft(pLeft), pRight(pRight)
+{
+#ifdef DEBUG
+	std::cout << "EConstructor:\t" << this << std::endl;
+#endif // DEBUG
+}
+template<typename T > Tree<T>::Element::~Element()
+{
+#ifdef DEBUG
+	std::cout << "EDestructor:\t" << this << std::endl;
+#endif // DEBUG
+}
+template<typename T> void Tree<T>::insert(T Data, Element* Root)
+{
+	if (this->Root == nullptr)this->Root = new Element(Data);
+	if (Root == nullptr)return;
+	if (Data < Root->Data)
+	{
+		if (Root->pLeft == nullptr)Root->pLeft = new Element(Data);
+		else insert(Data, Root->pLeft);
+	}
+	else
+	{
+		if (Root->pRight == nullptr)Root->pRight = new Element(Data);
+		else insert(Data, Root->pRight);
+	}
+}
+template <typename T> void Tree<T>::erase(T Data, Element*& Root)
+{
+	if (Root == nullptr)return;
+	erase(Data, Root->pLeft);
+	erase(Data, Root->pRight);
+	if (Data == Root->Data)
+	{
+		if (Root->pLeft == Root->pRight)
 		{
-			if (Root->pLeft == nullptr) Root->pLeft = new Element(Data);
-			else insert_param(Data, Root->pLeft);
+			delete Root;
+			Root = nullptr;
 		}
-		else if (Data > Root->Data)
+		else
 		{
-			if (Root->pRight == nullptr) Root->pRight = new Element(Data);
-			else insert_param(Data, Root->pRight);
+			if (count(Root->pLeft) > count(Root->pRight))
+			{
+				Root->Data = maxValue(Root->pLeft);
+				erase(maxValue(Root->pLeft), Root->pLeft);
+			}
+			else
+			{
+				Root->Data = minValue(Root->pRight);
+				erase(minValue(Root->pRight), Root->pRight);
+			}
 		}
 	}
+}
+template <typename T> void Tree<T>::print(Element* Root)
+{
+	if (Root == nullptr)return;
+	print_param(Root->pLeft);
+	std::cout << Root->Data << "\t";
+	print_param(Root->pRight);
+}
+template <typename T> void Tree<T>::depth_print(Element* Root, int Depth, int Width)const
+{
+	if (Root == nullptr)
+	{
+		if (Depth == 0)
+		{
+			std::cout.width(Width * pow(2, (this->depth() - Depth) / 3));
+			std::cout << "";
+		}
+		return;
+	}
+	if (Depth == 0)
+	{
+		std::cout.width(Width);
+		std::cout << Root->Data;
+		std::cout.width(Width);
+		std::cout << "";
+	}
+	depth_print(Root->pLeft, Depth - 1, Width);
+	depth_print(Root->pRight, Depth - 1, Width);
+}
+template <typename T> void Tree<T>::tree_print(Element* Root, int Width, int Depth)const
+{
+	if (Root == nullptr) return;
+	if (Depth >= this->depth())return;
+	depth_print(Root, Depth, Width / 2);
+	std::cout << std::endl << std::endl;
+	tree_print(Root, Width / 2, Depth + 1);
+}
+template <typename T> void Tree<T>::balance(Element* Root)
+{
+	if (Root == nullptr) return;
+	if (abs(count(Root->pLeft) - count(Root->pRight)) < 2) return;
+	if (count(Root->pLeft) < count(Root->pRight))
+	{
+		if (Root->pLeft) insert(Root->Data, Root->pLeft);
+		else Root->pLeft = new Element(Root->Data);
+		Root->Data = minValue(Root->pRight);
+		erase(minValue(Root->pRight), Root->pRight);
+	}
+	else
+	{
+		if (Root->pRight)insert(Root->Data, Root->pRight);
+		else Root->pRight = new Element(Root->Data);
+		Root->Data = maxValue(Root->pLeft);
+		erase(maxValue(Root->pLeft), Root->pLeft);
+	}
+	balance(Root->pLeft);
+	balance(Root->pRight);
+	balance(Root);
+}
+template <typename T> T Tree<T>::minValue(Element* Root)const
+{
+	return Root == nullptr ? 0 : Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
+}
+template <typename T> T Tree<T>::maxValue(Element* Root)const
+{
+	return Root == nullptr ? 0 : Root->pRight == nullptr ? Root->Data : maxValue(Root->pRight);
+}
+template <typename T> T Tree<T>::sum(Element* Root)const
+{
+	return Root == nullptr ? 0 : sum_param(Root->pLeft) + sum_param(Root->pRight) + Root->Data;
+}
+template <typename T> T Tree<T>::count(Element* Root)const
+{
+	return Root == nullptr ? 0 : 1 + count(Root->pLeft) + count(Root->pRight);
+}
+template <typename T> T Tree<T>::depth(Element* Root)const
+{
+	if (Root == nullptr)return 0;
+	int l_depth = depth(Root->pLeft) + 1;
+	int r_depth = depth(Root->pRight) + 1;
+	return	l_depth > r_depth ? l_depth : r_depth;
+}
+template <typename T> void Tree<T>::clear_tree(Element* Root)
+{
+	if (Root == nullptr) return;
+	clear_tree(Root->pLeft);
+	clear_tree(Root->pRight);
+	delete Root;
+}
 
-public:
-	void insert(int Data)
+//							Constructors
+
+template <typename T> Tree<T>::Tree() : Root(nullptr)
+{
+	#ifdef DEBUG
+	std::cout << "EConstructor:\t" << this << std::endl;
+	#endif // DEBUG
+}
+template <typename T> Tree<T>::Tree(const std::initializer_list<T>& list) :Tree()
+{
+	for (T i : list)
+		insert(i);
+}
+template <typename T> Tree<T>::~Tree()
+{
+	clear_tree();
+	#ifdef DEBUG
+		std::cout << "TDestructor:\t" << this << std::endl;
+	#endif // DEBUG
+}
+
+//								Metods 
+
+template <typename T> void Tree<T>::insert(T Data)
 	{
-		return insert_param(Data, Root);
+		insert(Data, Root);
 	}
-};
+template <typename T> void Tree<T>::erase(T Data)
+	{
+		erase(Data, Root);
+	}
+template <typename T> void Tree<T>::balance()
+	{
+		balance(Root);
+	}
+template <typename T> void Tree<T>::clear_tree()
+	{
+		clear_tree(Root);
+		Root = nullptr;
+	}
+template <typename T> void Tree<T>::print()const
+	{
+		print(Root);
+	}
+template <typename T> void Tree<T>::depth_print(int depth)const
+	{
+		depth_print(Root, depth, 64);
+	}
+template <typename T> void Tree<T>::tree_print()const
+	{
+		tree_print(Root, 64);
+	}
+template <typename T> T Tree<T>::minValue()const
+	{
+		return minValue(Root);
+	}
+template <typename T> T Tree<T>::maxValue()const
+	{
+		return maxValue(Root);
+	}
+template <typename T> T Tree<T>::sum()const
+	{
+		return sum(Root);
+	}
+template <typename T> T Tree<T>::count()const
+	{
+		return count(Root);
+	}
+template <typename T> double Tree<T>::Avg()const
+	{
+		return (double)sum() / count();
+	}
+template <typename T> T Tree<T>::depth()const
+	{
+		return depth(Root);
+	}
 
 //#define BASE_CHECK
 //#define DEPTH_CHECK
@@ -381,7 +409,7 @@ void main()
 	std::cout << delim;
 #endif // MEASURE
 
-	Tree tree = { 89,55,34,21,13,8,5,3 };
+	Tree<int> tree = { 89,55,34,21,13,8,5,3 };
 	tree.tree_print();
 	std::cout << delim;
 	tree.balance();
