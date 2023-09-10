@@ -1,7 +1,7 @@
 ﻿#include"Header_Tree.h"
 #include"Class_Tree.cpp"
 
-//#define BASE_CHECK
+#define BASE_CHECK
 //#define DEPTH_CHECK
 //#define MEASURE
 //#define BALANCE_CHECK
@@ -32,7 +32,7 @@ void main()
 	std::cout << delim;
 	*/
 
-	Tree tree = { 15,14,13,12,11,10,9,8,7,6,5,4,3,2,1 };
+	Tree<int> tree = { 15,14,13,12,11,10,9,8,7,6,5,4,3,2,1 };
 	tree.tree_print();
 	std::cout << delim;
 	tree.balance();
@@ -57,7 +57,7 @@ void main()
 #endif // BASE_CHECK
 
 #ifdef DEPTH_CHECK
-	Tree tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29};
+	Tree<int> tree = { 50, 25, 75, 16, 32, 64, 90, 28, 29};
 	tree.print();
 	std::cout << "\nГлубина дерева: " << tree.depth() << std::endl;
 
@@ -68,21 +68,24 @@ void main()
 
 #ifdef MEASURE
 	std::cout << "Введите число элементов: "; std::cin >> n;
-	Tree tree;
+	Tree<int> tree;
 
 	for (int i = 0; i < n; i++) tree.insert(rand() % 100);
 	std::cout << delim;
-	measure("Метод count ", tree, &Tree::count);
+	measure("Метод count ", tree, &Tree<int>::count);
 	std::cout << delim;
-	measure("Метод erase ", tree, &Tree::erase, 1);
+	measure("Метод erase ", tree, &Tree<int>::erase, 1);
 	std::cout << delim;
-	measure("Метод AVG", tree, &Tree::Avg);
+	measure("Метод AVG", tree, &Tree<int>::Avg);
 	std::cout << delim;
 #endif // MEASURE
 
+#ifdef BALANCE_CHECK
 	Tree<int> tree = { 89,55,34,21,13,8,5,3 };
 	tree.tree_print();
 	std::cout << delim;
 	tree.balance();
 	tree.tree_print();
+#endif // BALANCE_CHECK
+
 }

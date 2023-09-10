@@ -6,7 +6,13 @@
 
 #define delim "\n-------------------------------------------------------------------------\n"
 
-template<class T>class Tree
+template <typename T> class Tree;
+class Element;
+template <typename T> class UniqueTree;
+
+////////////////////////////////////////  Tree  ////////////////////////////////////////	
+
+template<typename T>class Tree
 {
 protected:
 	class Element
@@ -18,10 +24,12 @@ protected:
 		Element(T Data, Element* pLeft = nullptr, Element* pRaght = nullptr);
 		~Element();
 
-		friend class Tree;
-		friend class UniqueTree<T>;
+		friend class Tree<T>;
+		template<typename T> friend class UniqueTree;
 
 	}*Root;
+
+////////////////////////////////////////  TreeInternalMethods  ////////////////////////////////////////	
 
 	void insert(T Data, Element* Root);
 	void erase(T Data, Element*& Root);
@@ -38,19 +46,21 @@ protected:
 
 public:
 
-	//						Constructors
+////////////////////////////////////////  TreeConstructors  ////////////////////////////////////////	
+
 	Tree();
 	Tree(const std::initializer_list<T>& list);
 	~Tree();
 
-	//							Metods 
+////////////////////////////////////////  TreeMethods  ////////////////////////////////////////	
+
 	void insert(T Data);
 	void erase(T Data);
 	void clear_tree();
 	T count()const;
 	T sum()const;
 	T depth()const;
-	double Avg()const;
+	T Avg()const;
 	T minValue()const;
 	T maxValue()const;
 	void print()const;
@@ -58,13 +68,18 @@ public:
 	void tree_print()const;
 	void balance();
 };
+
+////////////////////////////////////////  UniqueTree  ////////////////////////////////////////
+
 template<typename T>class UniqueTree : public Tree<T>
 {
 	void insert(T Data, typename Tree<T>::Element* Root);
 public:
-	void insert(int Data);
+	void insert(T Data);
 };
 
-template<typename T> void measure(const char* msg, Tree<T>& t, T(Tree<T>::* f)()const);
-template<typename T> void measure(const char* msg, Tree<T>& t, void (Tree<T>::* f)(int), int Data);
-template<typename T> void measure(const char* msg, Tree<T>& t, void (Tree<T>::* f)());
+////////////////////////////////////////  Function  ////////////////////////////////////////
+
+template <typename T> void measure(const char* msg, Tree<T>& t, T(Tree<T>::* f)()const);
+template <typename T> void measure(const char* msg, Tree<T>& t, void (Tree<T>::* f)(T), T Data);
+template <typename T> void measure(const char* msg, Tree<T>& t, void (Tree<T>::* f)());
