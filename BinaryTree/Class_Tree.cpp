@@ -21,7 +21,7 @@ template <typename T> Tree<T>::~Tree()
 #endif // DEBUG
 }
 
-////////////////////////////////////////  TreeInternalMethods  ////////////////////////////////////////	
+////////////////////////////////////////  Element  ////////////////////////////////////////	
 
 template<typename T > Tree<T>::Element::Element(T Data, Element* pLeft, Element* pRaght) : Data(Data), pLeft(pLeft), pRight(pRight)
 {
@@ -35,6 +35,9 @@ template<typename T > Tree<T>::Element::~Element()
 	std::cout << "EDestructor:\t" << this << std::endl;
 #endif // DEBUG
 }
+
+////////////////////////////////////////  TreeInternalMethods  ////////////////////////////////////////	
+
 template<typename T> void Tree<T>::insert(T Data, Element* Root)
 {
 	if (this->Root == nullptr)this->Root = new Element(Data);
@@ -147,11 +150,11 @@ template <typename T> T Tree<T>::sum(Element* Root)const
 {
 	return Root == nullptr ? 0 : sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
 }
-template <typename T> T Tree<T>::count(Element* Root)const
+template <typename T> int Tree<T>::count(Element* Root)const
 {
 	return Root == nullptr ? 0 : 1 + count(Root->pLeft) + count(Root->pRight);
 }
-template <typename T> T Tree<T>::depth(Element* Root)const
+template <typename T> int Tree<T>::depth(Element* Root)const
 {
 	if (Root == nullptr)return 0;
 	int l_depth = depth(Root->pLeft) + 1;
@@ -209,15 +212,15 @@ template <typename T> T Tree<T>::sum()const
 {
 	return sum(Root);
 }
-template <typename T> T Tree<T>::count()const
+template <typename T> int Tree<T>::count()const
 {
 	return count(Root);
 }
-template <typename T> T Tree<T>::Avg()const
+template <typename T> double Tree<T>::Avg()const
 {
 	return (double)sum() / count();
 }
-template <typename T> T Tree<T>::depth()const
+template <typename T> int Tree<T>::depth()const
 {
 	return depth(Root);
 }
@@ -244,7 +247,6 @@ template<typename T> void UniqueTree<T>::insert(T Data)
 {
 	return insert(Data, Tree<T>::Root);
 }
-
 ////////////////////////////////////////  Function  ////////////////////////////////////////
 
 template <typename T> void measure(const char* msg, Tree<T>& t, T(Tree<T>::* f)()const)
@@ -271,3 +273,4 @@ template <typename T> void measure(const char* msg, Tree<T>& t, void (Tree<T>::*
 	clock_t end = clock();
 	std::cout << "отработал за " << double(end - start) / CLOCKS_PER_SEC << " секунд";
 }
+

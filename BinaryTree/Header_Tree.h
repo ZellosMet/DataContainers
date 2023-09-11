@@ -6,10 +6,6 @@
 
 #define delim "\n-------------------------------------------------------------------------\n"
 
-template <typename T> class Tree;
-class Element;
-template <typename T> class UniqueTree;
-
 ////////////////////////////////////////  Tree  ////////////////////////////////////////	
 
 template<typename T>class Tree
@@ -34,16 +30,16 @@ protected:
 	void insert(T Data, Element* Root);
 	void erase(T Data, Element*& Root);
 	void clear_tree(Element* Root);
-	T depth(Element* Root)const;
+	int depth(Element* Root)const;
 	T sum(Element* Root)const;
-	T count(Element* Root)const;
+	int count(Element* Root)const;
 	T minValue(Element* Root)const;
 	T maxValue(Element* Root)const;
 	void print(Element* Root);
 	void depth_print(Element* Root, int Depth, int Width)const;
 	void tree_print(Element* Root, int Width, int Depth = 0)const;
 	void balance(Element* Root);
-
+	
 public:
 
 ////////////////////////////////////////  TreeConstructors  ////////////////////////////////////////	
@@ -57,16 +53,17 @@ public:
 	void insert(T Data);
 	void erase(T Data);
 	void clear_tree();
-	T count()const;
+	int count()const;
 	T sum()const;
-	T depth()const;
-	T Avg()const;
+	int depth()const;
+	double Avg()const;
 	T minValue()const;
 	T maxValue()const;
 	void print()const;
 	void depth_print(int depth)const;
 	void tree_print()const;
 	void balance();
+	
 };
 
 ////////////////////////////////////////  UniqueTree  ////////////////////////////////////////
@@ -77,7 +74,6 @@ template<typename T>class UniqueTree : public Tree<T>
 public:
 	void insert(T Data);
 };
-
 ////////////////////////////////////////  Function  ////////////////////////////////////////
 
 template <typename T> void measure(const char* msg, Tree<T>& t, T(Tree<T>::* f)()const);
