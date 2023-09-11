@@ -85,11 +85,10 @@ protected:
 	{
 		if (Root == nullptr)
 		{
-			if (Depth == 0) 
-			{
-				std::cout.width(Width*pow(2,(this->depth() - Depth)/3));
-				std::cout << "";
-			}
+			
+			if(Depth == 1)std::cout.width(Width*4);
+			if(Depth == 0)std::cout.width(Width*2);
+			std::cout << "";
 			return;
 		}
 		if (Depth == 0)
